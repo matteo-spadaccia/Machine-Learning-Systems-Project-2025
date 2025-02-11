@@ -1,29 +1,60 @@
 import torch
 import cupy as cp
 import triton
+import triton.language as tl
 import numpy as np
 import time
 import json
 from test import testdata_kmeans, testdata_knn, testdata_ann
+
 # ------------------------------------------------------------------------------------------------
 # Your Task 1.1 code here
 # ------------------------------------------------------------------------------------------------
 
-# You can create any kernel here
-# def distance_kernel(X, Y, D):
-#     pass
-
 def distance_cosine(X, Y):
-    pass
+    """
+    Compute the cosine distance: d(X, Y) = 1 - (X ⋅ Y) / (|X| |Y|)
+    """
+    dot_product = torch.sum(X * Y, dim=-1)
+    norm_X = torch.norm(X, dim=-1)
+    norm_Y = torch.norm(Y, dim=-1)
+    return 1 - (dot_product / (norm_X * norm_Y))
+
 
 def distance_l2(X, Y):
-    pass
+    """
+    Compute the L2 (Euclidean) distance: d(X, Y) = sqrt(sum((X_i - Y_i)^2))
+    """
+    return torch.sqrt(torch.sum((X - Y) ** 2, dim=-1))
+
 
 def distance_dot(X, Y):
-    pass
+    """
+    Compute the dot product: d(X, Y) = X ⋅ Y
+    """
+    return torch.sum(X * Y, dim=-1)
+
 
 def distance_manhattan(X, Y):
-    pass
+    """
+    Compute the Manhattan (L1) distance: d(X, Y) = sum(|X_i - Y_i|)
+    """
+    return torch.sum(torch.abs(X - Y), dim=-1)
+
+
+# Example usage (on GPU if available)
+def test():
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    X = torch.randn((10000, 128), device=device)  # Large batch of vectors
+    Y = torch.randn((10000, 128), device=device)
+    
+    print("Cosine Distance:", distance_cosine(X, Y))
+    print("L2 Distance:", distance_l2(X, Y))
+    print("Dot Product:", distance_dot(X, Y))
+    print("Manhattan Distance:", distance_manhattan(X, Y))
+
+test()
+
 
 # ------------------------------------------------------------------------------------------------
 # Your Task 1.2 code here
