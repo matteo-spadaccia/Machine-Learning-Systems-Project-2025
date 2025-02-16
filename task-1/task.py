@@ -38,7 +38,6 @@ def dot_dist_cupy(X, Y):
 def dot_dist_multidim(X, Y):
     return torch.sum(X * Y, dim=-1)
 
-
 # L1 (Manhattan) distance: d(X, Y) = sum(|X_i - Y_i|)
 def L1_dist(X, Y):
     return torch.sum(torch.abs(X - Y))
