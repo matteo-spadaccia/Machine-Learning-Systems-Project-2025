@@ -64,8 +64,34 @@ def our_knn(N, D, A, X, K):
 # def distance_kernel(X, Y, D):
 #     pass
 
-def our_kmeans(N, D, A, K):
-    pass
+import random
+
+def our_kmeans(N, D, A, K, distance_type='cos', max_iters=100, tol=1e-4):
+    distance_funcs = {'cos': cos_dist,'L2': L2_dist,'dot': dot_dist,'L1': L1_dist}
+    if distance_type not in distance_funcs: raise ValueError(f"Unsupported distance type: {distance_type}")
+
+    dist_func = distance_funcs[distance_type]
+
+    # Initializing centroids and cluster assignments
+    indices = random.sample(range(N), K)
+    centroids = A[indices]
+    R = torch.zeros(N, dtype=torch.long, device='cuda')
+
+    for iteration in range(max_iters):
+        prev_centroids = centroids.clone()
+        for i in range(N): # Assignment
+            distances = torch.tensor([dist_func(A[i], centroid) for centroid in centroids], device='cuda')
+            R[i] = torch.argmin(distances)
+        for k in range(K): # Update
+            assigned_points = A[R == k]
+            if assigned_points.shape[0] > 0:
+                centroids[k] = assigned_points.mean(dim=0)
+        centroid_shifts = torch.norm(centroids - prev_centroids, dim=1)
+        if torch.max(centroid_shifts) < tol: # Convergence check
+            break
+    print(f" Iterations = {iteration+1}")
+
+    return R.cpu()
 
 # ------------------------------------------------------------------------------------------------
 # Your Task 2.2 code here
