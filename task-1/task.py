@@ -53,42 +53,75 @@ def L1_dist_multidim(X, Y):
 
 # You can create any kernel here
 
-def top_k_gpu(N, D, A, X, K, distance_metric="L2"):
+import torch
+import time
+
+def top_k_gpu(N, D, A, X, K, distance_metric="L2", batch_size=100000):
     """
-    Compute Top-K nearest neighbors for vector X from dataset A using GPU.
+    Compute Top-K nearest vectors in A for query X using GPU.
 
     Parameters:
-    N : int - Number of vectors
-    D : int - Dimension of vectors
-    A : torch.Tensor (N, D) - Collection of vectors (on GPU)
-    X : torch.Tensor (D) - Query vector (on GPU)
-    K : int - Number of top neighbors to retrieve
-    distance_metric : str - Distance function ("L2", "cosine", "dot", "L1")
+    - N (int): Number of vectors
+    - D (int): Dimension of vectors
+    - A (torch.Tensor): Dataset of vectors (stored in GPU)
+    - X (torch.Tensor): Query vector (stored in GPU)
+    - K (int): Number of nearest neighbors to find
+    - distance_metric (str): Distance metric ("L2", "cosine", "dot", "L1")
+    - batch_size (int): Batch size for processing large datasets
 
     Returns:
-    indices : torch.Tensor (K) - Indices of the K nearest neighbors
-    distances : torch.Tensor (K) - Corresponding distances
+    - top_k_indices (torch.Tensor): Indices of the K nearest vectors
+    - top_k_distances (torch.Tensor): Corresponding distances
     """
+    torch.cuda.synchronize()
+    start_time = time.time()
 
-    # Expand X to match A's shape for broadcasting
-    X = X.unsqueeze(0)  # (1, D)
+    A = A.to(torch.float16)  # Reduce precision for memory savings
+    X = X.to(torch.float16)
 
-    # Compute distances by calling the appropriate function
-    if distance_metric == "L2":
-        dists = torch.tensor([L2_dist(A[i], X.squeeze()) for i in range(N)], device="cuda")
-    elif distance_metric == "cosine":
-        dists = torch.tensor([cos_dist(A[i], X.squeeze()) for i in range(N)], device="cuda")
-    elif distance_metric == "dot":
-        dists = torch.tensor([dot_dist(A[i], X.squeeze()) for i in range(N)], device="cuda")
-    elif distance_metric == "L1":
-        dists = torch.tensor([L1_dist(A[i], X.squeeze()) for i in range(N)], device="cuda")
-    else:
-        raise ValueError("Unsupported distance metric")
+    num_batches = (N + batch_size - 1) // batch_size  # Compute number of batches
+    all_indices = []
+    all_distances = []
 
-    # Get Top-K smallest distances
-    distances, indices = torch.topk(dists, K, largest=False)
+    for i in range(num_batches):
+        batch_start = i * batch_size
+        batch_end = min((i + 1) * batch_size, N)
+        batch = A[batch_start:batch_end]  # Get batch
+        
+        # Compute distances
+        if distance_metric == "L2":
+            dists = torch.sqrt(torch.sum((batch - X) ** 2, dim=-1))
+        elif distance_metric == "cosine":
+            dists = 1 - torch.sum(batch * X, dim=-1) / (torch.norm(batch, dim=-1) * torch.norm(X))
+        elif distance_metric == "dot":
+            dists = torch.sum(batch * X, dim=-1)
+        elif distance_metric == "L1":
+            dists = torch.sum(torch.abs(batch - X), dim=-1)
+        else:
+            raise ValueError("Unsupported distance metric!")
 
-    return indices, distances
+        # Get Top-K indices for current batch
+        batch_top_k_distances, batch_top_k_indices = torch.topk(dists, K, largest=False)
+        batch_top_k_indices += batch_start  # Adjust index offset
+
+        all_indices.append(batch_top_k_indices)
+        all_distances.append(batch_top_k_distances)
+
+    # Merge results from all batches
+    top_k_distances = torch.cat(all_distances)
+    top_k_indices = torch.cat(all_indices)
+
+    # Get final Top-K from merged results
+    final_top_k_distances, final_top_k_indices = torch.topk(top_k_distances, K, largest=False)
+    final_top_k_indices = top_k_indices[final_top_k_indices]
+
+    torch.cuda.synchronize()
+    end_time = time.time()
+
+    print(f"⏱️ Time taken: {end_time - start_time:.4f} seconds")
+    
+    return final_top_k_indices, final_top_k_distances
+        
 
 # Example usage:
     
@@ -172,7 +205,7 @@ def benchmark_distance(N, D, A, X, K, distance_metric, num_trials=5):
 
 # Example usage
 if __name__ == "__main__":
-    N, D = 4000, 128  # 4000 vectors, each of 128 dimensions
+    N, D = 4000000, 128  # 4000 vectors, each of 128 dimensions
     K = 5  # Top-K neighbors
 
     # Generate random dataset and query vector on GPU
