@@ -1,7 +1,7 @@
 # Task 1
 
 > [!TIP]
-> To run the test and benchmaking of Kmeans, KNN and ANN with the different distances fucntions
+> To run the test and benchmaking of Kmeans, KNN and ANN with the different distances fucntions:
 > ```shell
 > $ python task-1/task.py
 > ```
