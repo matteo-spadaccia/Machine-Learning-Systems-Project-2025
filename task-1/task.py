@@ -156,8 +156,6 @@ def our_kmeans(N, D, A, K, distance_type='cos', max_iters=100, tol=1e-4):
 # Your Task 2.2 code here
 # ------------------------------------------------------------------------------------------------
 
-# You can create any kernel here
-
 def our_ann(N, D, A, X, K):
     pass
 
