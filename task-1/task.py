@@ -373,7 +373,7 @@ def test_distances(D1 = 64, D2 = 256, dimensions = [2, 2**5, 2**10, 2**15, 2**20
 
     # Benchmarking distances computation functions with different dimensions
     print("\nBENCHMARKING DISTANCE FUNCTIONS...")
-    print(f" (trials# = {num_trials})")
+    print(f"(trials# = {num_trials})")
 
     def benchmark_distance_functions(func_cpu, func_gpu1, func_gpu2, D, num_trials=num_trials):
 
@@ -459,7 +459,7 @@ def test_knn(N:int=1000, batch_size=100000, num_trials = 10, test_file=""):
     N, D, A, X, K = testdata_knn(test_file,N)
 
     print(f"N = {N} (D = {D}, K = {K}, trials# = {num_trials})")
-    if N > batch_size: print(f" Data split in batches (batch_size = {batch_size})")
+    if N > batch_size: print(f"Data split in batches (batch_size = {batch_size})!")
 
     results = {}
 
@@ -514,6 +514,7 @@ def test_kmeans(D:int=100, device:str='cuda' , max_iters:int=1000, tol:float=1e-
     N, D, A_np, K = testdata_kmeans(test_file,D)
     
     print(f"D = {D} (N = {N}, K = {K}, trials# = {num_trials})")
+    if device != 'cuda': print(f"Device: {device}!)")
 
     results = {}
 
@@ -631,10 +632,11 @@ if __name__ == "__main__":
             speedups.append(resCPU[distance_type]['time_ms']/resGPU[distance_type]['time_ms'])
         print(f" -> Avg. GPU speedup = {np.average(speedups):.2f}x")
 
-    print("_______________________________________\n\n")
+    print("_______________________________________\n")
     
     for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
+        print()
         test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
-        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
+        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
     print("_______________________________________\n\n")
