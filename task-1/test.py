@@ -12,29 +12,9 @@ def read_data(file_path=""):
     else:
         return np.loadtxt(file_path)
 
-def testdata_kmeans(test_file):
+def testdata_knn(test_file, N:int=1000):
     if test_file == "":
         # use random data
-        N = 1000
-        D = 100
-        A = np.random.randn(N, D)
-        K = 10
-        return N, D, A, K
-    else:
-        # read n, d, a_file, x_file, k from test_file.json
-        with open(test_file, "r") as f:
-            data = json.load(f)
-            N = data["n"]
-            D = data["d"]
-            A_file = data["a_file"]
-            K = data["k"]
-            A = np.loadtxt(A_file)
-        return N, D, A, K
-
-def testdata_knn(test_file):
-    if test_file == "":
-        # use random data
-        N = 1000
         D = 100
         A = np.random.randn(N, D)
         X = np.random.randn(D)
@@ -52,6 +32,24 @@ def testdata_knn(test_file):
             A = np.loadtxt(A_file)
             X = np.loadtxt(X_file)
         return N, D, A, X, K
+
+def testdata_kmeans(test_file, D:int=100):
+    if test_file == "":
+        # use random data
+        N = 1000
+        A = np.random.randn(N, D)
+        K = 10
+        return N, D, A, K
+    else:
+        # read n, d, a_file, x_file, k from test_file.json
+        with open(test_file, "r") as f:
+            data = json.load(f)
+            N = data["n"]
+            D = data["d"]
+            A_file = data["a_file"]
+            K = data["k"]
+            A = np.loadtxt(A_file)
+        return N, D, A, K
     
 def testdata_ann(test_file):
     if test_file == "":

@@ -6,8 +6,8 @@ import time
 import json
 import random
 import warnings
-from scipy.spatial.distance import cosine, euclidean, cityblock # For testing
-from sklearn.neighbors import NearestNeighbors
+from scipy.spatial.distance import cosine, euclidean, cityblock # (for testing)
+from sklearn.neighbors import NearestNeighbors # (for testing)
 from test import testdata_kmeans, testdata_knn, testdata_ann
 
 # Defining float type
@@ -192,7 +192,7 @@ def our_knn(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, distance_metric
 # 2.1 - KMeans implementation
 # ------------------------------------------------------------------------------------------------
 
-def our_kmeans(N:int, D:int, A:torch.Tensor, K:int, distance_metric:str='dot', max_iters:int=100, tol:float=1e-4) -> tuple[torch.Tensor, torch.Tensor, int]:
+def our_kmeans(N:int, D:int, A:torch.Tensor, K:int, distance_metric:str='dot', max_iters:int=1000, tol:float=1e-4, device:str='cuda') -> tuple[torch.Tensor, torch.Tensor, int]:
     """
     Clusters the vectors in A with the KMeans method.
 
@@ -214,8 +214,7 @@ def our_kmeans(N:int, D:int, A:torch.Tensor, K:int, distance_metric:str='dot', m
     dist_multidim_funct = dist_multidim_functions[distance_metric]
 
     # Ensuring inputs' proper format
-    A = torch.as_tensor(A, dtype=DTYPE, device='cuda')
-    device = A.device  # (same device)
+    A = torch.as_tensor(A, dtype=DTYPE, device=device)
 
     # Initializing centroids
     centroids = A[torch.randperm(N)[:K]]
@@ -248,7 +247,7 @@ def our_kmeans(N:int, D:int, A:torch.Tensor, K:int, distance_metric:str='dot', m
 # 2.2 - ANN implementation
 # ------------------------------------------------------------------------------------------------
 
-def our_ann(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_kmeans:int=20, K_knn:int=10, distance_metric:str='dot', batch_size:int=100000, max_iters:int=100, tol:float=1e-4) -> tuple[torch.Tensor, torch.Tensor]:
+def our_ann(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_kmeans:int=20, K_knn:int=10, distance_metric:str='dot', batch_size:int=100000, max_iters:int=1000, tol:float=1e-4) -> tuple[torch.Tensor, torch.Tensor]:
     """
     Extracts the top-K nearest vectors in A for the query vector X through the Approximate Nearest Neighbors (ANN) algorithm.
 
@@ -302,7 +301,7 @@ def our_ann(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_kmeans:int=20
 # Testing and benchmarking all functions
 # ------------------------------------------------------------------------------------------------
 
-def test_distances(D1 = 64, D2 = 256, dimensions = [16, 4096, 65536], num_trials = 1000, tolerance=1e-2):
+def test_distances(D1 = 64, D2 = 256, dimensions = [2, 2**5, 2**10, 2**15, 2**20], num_trials = 1000, tolerance=1e-2):
     """
     Testing and benchmarking distance functions.
     """
@@ -451,15 +450,16 @@ def standard_knn(X_ref, X_query, K, metric='euclidean'):
     distances, indices = knn.kneighbors(X_query)
     return indices, distances
 
-def test_knn(batch_size=100000, num_trials = 10):
+def test_knn(N:int=1000, batch_size=100000, num_trials = 10, test_file=""):
     """
     Testing and benchmarking KNN with different distances functions.
     """
     print("\nTESTING AND BENCHMARKING KNN WITH DIFFERENT DISTANCES...")
 
-    N, D, A, X, K = testdata_knn("") # or test_file.json
+    N, D, A, X, K = testdata_knn(test_file,N)
 
-    print(f" (K = {K}, trials# = {num_trials})")
+    print(f"N = {N} (D = {D}, K = {K}, trials# = {num_trials})")
+    if N > batch_size: print(f" Data split in batches (batch_size = {batch_size})")
 
     results = {}
 
@@ -496,34 +496,34 @@ def test_knn(batch_size=100000, num_trials = 10):
         # Comparing results
         correct_indices = np.array_equal(indices_custom_np, indices_std)
         if np.sum(indices_custom_np != indices_std)==0:
-            print(f"\nWITH {distance_type:>3} distance: OK -> Avg.time = {avg_time:.2f}ms")
+            print(f"WITH {distance_type:>3} distance: OK -> Avg.time = {avg_time:.2f}ms")
         else:
             mismatches = np.sum(indices_custom_np != indices_std)
-            print(f"\nWITH {distance_type:>3} distance: INCORRECT ({mismatches} mismatches) -> Avg.time = {avg_time:.2f}ms")
+            print(f"WITH {distance_type:>3} distance: INCORRECT ({mismatches} mismatches) -> Avg.time = {avg_time:.2f}ms")
 
         results[distance_type] = {'time_ms': avg_time, 'indices_match': correct_indices}
 
     return results
 
-def test_kmeans(max_iters:int=100, tol:float=1e-4, num_trials=10):
+def test_kmeans(D:int=100, device:str='cuda' , max_iters:int=1000, tol:float=1e-4, num_trials=10, test_file=""):
     """
     Benchmarking KMeans with different distance functions.
     """
     print("\nBENCHMARKING KMEANS WITH DIFFERENT DISTANCES...")
 
-    N, D, A_np, K = testdata_kmeans("") # or test_file.json
+    N, D, A_np, K = testdata_kmeans(test_file,D)
     
-    print(f" (K = {K}, trials# = {num_trials})")
+    print(f"D = {D} (N = {N}, K = {K}, trials# = {num_trials})")
 
     results = {}
 
     # Preparing to benchmark each distance method for KMeans
     def benchmark_kmeans(N, D, A, K, distance_metric, num_trials=num_trials):
-        A_torch = torch.tensor(A, dtype=DTYPE).to('cuda')
+        A_torch = torch.tensor(A, dtype=DTYPE).to(device)
         times, iterations = [], []
         for _ in range(num_trials):
             start = time.time()
-            Kmeans_labels, Kmeans_centroids, Kmeans_iterations = our_kmeans(N, D, A_torch, K, distance_metric, max_iters, tol)
+            Kmeans_labels, Kmeans_centroids, Kmeans_iterations = our_kmeans(N, D, A_torch, K, distance_metric, max_iters, tol, device)
             torch.cuda.synchronize()
             end = time.time()
             times.append(end - start)
@@ -537,7 +537,7 @@ def test_kmeans(max_iters:int=100, tol:float=1e-4, num_trials=10):
         avg_time, avg_iters = benchmark_kmeans(N, D, A_np, K, dist_type)
         avg_time = avg_time*1000
         results[dist_type] = {'time_ms': avg_time, 'iterations': avg_iters}
-        print(f"\nWITH {dist_type:>3} DISTANCE: Avg.time = {avg_time:.2f}ms, Avg.iters = {avg_iters:.2f}")
+        print(f"WITH {dist_type:>3} DISTANCE: Avg.time = {avg_time:.2f}ms, Avg.iters = {avg_iters:.2f}")
     
     return results
 
@@ -555,15 +555,16 @@ def recall_rate(list1, list2):
         total_recall += recall
     return total_recall / len(list1)
 
-def test_ann(K_kmeans:int=20, K_knn:int=10, batch_size:int=100000, max_iters:int=100, tol:float=1e-4, num_trials=10):
+def test_ann(K_kmeans:int=20, K_knn:int=10, batch_size:int=100000, max_iters:int=1000, tol:float=1e-4, num_trials=10, test_file=""):
     """
     Testing and benchmarking ANN with different distance functions.
     """
     print("\nBENCHMARKING ANN WITH DIFFERENT DISTANCES...")
     
-    N, D, A, X, K = testdata_ann("")
+    N, D, A, X, K = testdata_ann(test_file)
 
-    print(f" (K = {K}, trials# = {num_trials})")
+    print(f"K_kmeans = {K_kmeans}, K_knn = {K_knn} (N = {N}, D = {D}, K = {K}, trials# = {num_trials})")
+    if N > batch_size: print(f" Data split in batches (batch_size = {batch_size})")
 
     results = {}
 
@@ -599,7 +600,7 @@ def test_ann(K_kmeans:int=20, K_knn:int=10, batch_size:int=100000, max_iters:int
 
         # Comparing results
         recRate = recall_rate(indices_custom_np, indices_std)
-        print(f"\nWITH {distance_type:>3} distance -> recall_rate = {recRate:.2f}, Avg.time = {avg_time:.2f}ms")
+        print(f"WITH {distance_type:>3} distance -> recall_rate = {recRate:.2f}, Avg.time = {avg_time:.2f}ms")
         
         results[distance_type] = {'time_ms': avg_time, 'recall_rate': recRate}
 
@@ -613,13 +614,27 @@ if __name__ == "__main__":
     print("_______________________________________\n\n")
     
     test_knn()
+    print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
+    test_knn(N=4000)
+    print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
+    test_knn(N=4000000)
     
     print("_______________________________________\n\n")
     
     test_kmeans()
+    for D in [2, 2**10]:
+        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
+        resCPU = test_kmeans(D=D, device='cpu')
+        resGPU = test_kmeans(D=D, device='cuda')
+        speedups = []
+        for distance_type in distance_types:
+            speedups.append(resCPU[distance_type]['time_ms']/resGPU[distance_type]['time_ms'])
+        print(f" -> Avg. GPU speedup = {np.average(speedups):.2f}x")
 
     print("_______________________________________\n\n")
     
-    test_ann()
+    for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
+        test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
+        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
 
     print("_______________________________________\n\n")
