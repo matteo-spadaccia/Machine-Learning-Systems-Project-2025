@@ -514,7 +514,7 @@ def test_kmeans(D:int=100, device:str='cuda' , max_iters:int=1000, tol:float=1e-
     N, D, A_np, K = testdata_kmeans(test_file,D)
     
     print(f"D = {D} (N = {N}, K = {K}, trials# = {num_trials})")
-    if device != 'cuda': print(f"Device: {device}!)")
+    if device != 'cuda': print(f"Device: {device}!")
 
     results = {}
 
