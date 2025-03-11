@@ -5,12 +5,9 @@ from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
 
-outputMaxLength = 200 # Setting the desried output lenght
+outputMaxLength = 200   # Setting the desired output length
 
-app = FastAPI()
-
-# Example documents in memory
-documents = [
+documents = [           # Defining some documents in memory
     "Cats are small furry carnivores that are often kept as pets.",
     "Dogs are domesticated mammals, not natural wild animals.",
     "Hummingbirds can hover in mid-air by rapidly flapping their wings.",
@@ -27,6 +24,8 @@ documents = [
     "Koi fish are ornamental varieties of the common carp and symbolize good luck.",
     "Guinea pigs are sociable and vocal rodents originally from South America.",
 ]
+
+app = FastAPI()
 
 # 1. Load embedding model
 EMBED_MODEL_NAME = "intfloat/multilingual-e5-large-instruct"

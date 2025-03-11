@@ -1,0 +1,168 @@
+
+TESTING DISTANCE FUNCTIONS...
+
+WITH PyTorch:
+        Cosine Distance = OK
+L2 (Euclidean) Distance = OK
+   Dot Product Distance = OK
+L1 (Manhattan) Distance = OK
+
+WITH Cupy:
+        Cosine Distance = OK
+L2 (Euclidean) Distance = OK
+   Dot Product Distance = OK
+L1 (Manhattan) Distance = OK
+
+WITH PyTorch AND multi-dimensional vectors:
+        Cosine Distance = OK
+L2 (Euclidean) Distance = OK
+   Dot Product Distance = OK
+L1 (Manhattan) Distance = OK
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+BENCHMARKING DISTANCE FUNCTIONS...
+(trials# = 1000)
+
+WITH D = 2:
+        Cosine Distance -> CPU    95.70 µs  |  CuPy-GPU   515.20 µs ( 0.19x)  |  PyTorch-GPU   186.74 µs ( 0.51x)
+L2 (Euclidean) Distance -> CPU    23.94 µs  |  CuPy-GPU   177.12 µs ( 0.14x)  |  PyTorch-GPU    65.99 µs ( 0.36x)
+   Dot Product Distance -> CPU     7.82 µs  |  CuPy-GPU   153.06 µs ( 0.05x)  |  PyTorch-GPU    35.72 µs ( 0.22x)
+L1 (Manhattan) Distance -> CPU    16.53 µs  |  CuPy-GPU    94.67 µs ( 0.17x)  |  PyTorch-GPU    50.00 µs ( 0.33x)
+
+WITH D = 32:
+        Cosine Distance -> CPU    75.80 µs  |  CuPy-GPU   518.58 µs ( 0.15x)  |  PyTorch-GPU   171.12 µs ( 0.44x)
+L2 (Euclidean) Distance -> CPU    23.63 µs  |  CuPy-GPU   176.03 µs ( 0.13x)  |  PyTorch-GPU    66.83 µs ( 0.35x)
+   Dot Product Distance -> CPU     7.71 µs  |  CuPy-GPU   149.36 µs ( 0.05x)  |  PyTorch-GPU    33.69 µs ( 0.23x)
+L1 (Manhattan) Distance -> CPU    16.52 µs  |  CuPy-GPU    93.42 µs ( 0.18x)  |  PyTorch-GPU    50.42 µs ( 0.33x)
+
+WITH D = 1024:
+        Cosine Distance -> CPU    78.95 µs  |  CuPy-GPU   512.10 µs ( 0.15x)  |  PyTorch-GPU   177.57 µs ( 0.44x)
+L2 (Euclidean) Distance -> CPU    25.14 µs  |  CuPy-GPU   179.29 µs ( 0.14x)  |  PyTorch-GPU    65.80 µs ( 0.38x)
+   Dot Product Distance -> CPU     7.85 µs  |  CuPy-GPU   149.94 µs ( 0.05x)  |  PyTorch-GPU    33.04 µs ( 0.24x)
+L1 (Manhattan) Distance -> CPU    17.55 µs  |  CuPy-GPU    96.55 µs ( 0.18x)  |  PyTorch-GPU    49.83 µs ( 0.35x)
+
+WITH D = 32768:
+        Cosine Distance -> CPU   119.92 µs  |  CuPy-GPU   576.16 µs ( 0.21x)  |  PyTorch-GPU   182.78 µs ( 0.66x)
+L2 (Euclidean) Distance -> CPU    69.79 µs  |  CuPy-GPU   191.48 µs ( 0.36x)  |  PyTorch-GPU    67.75 µs ( 1.03x)
+   Dot Product Distance -> CPU    20.77 µs  |  CuPy-GPU   163.17 µs ( 0.13x)  |  PyTorch-GPU    34.17 µs ( 0.61x)
+L1 (Manhattan) Distance -> CPU    62.17 µs  |  CuPy-GPU   111.49 µs ( 0.56x)  |  PyTorch-GPU    51.99 µs ( 1.20x)
+
+WITH D = 1048576:
+        Cosine Distance -> CPU  1313.29 µs  |  CuPy-GPU   553.65 µs ( 2.37x)  |  PyTorch-GPU   193.31 µs ( 6.79x)
+L2 (Euclidean) Distance -> CPU  2021.67 µs  |  CuPy-GPU  1402.84 µs ( 1.44x)  |  PyTorch-GPU   178.46 µs (11.33x)
+   Dot Product Distance -> CPU   386.74 µs  |  CuPy-GPU   216.36 µs ( 1.79x)  |  PyTorch-GPU    60.05 µs ( 6.44x)
+L1 (Manhattan) Distance -> CPU  2105.29 µs  |  CuPy-GPU   319.49 µs ( 6.59x)  |  PyTorch-GPU   176.45 µs (11.93x)
+_______________________________________
+
+
+
+TESTING AND BENCHMARKING KNN WITH DIFFERENT DISTANCES...
+N = 1000 (D = 100, K = 10, trials# = 10)
+WITH cos distance: OK -> Avg.time = 2.83ms
+WITH  L2 distance: OK -> Avg.time = 0.56ms
+WITH dot distance: OK -> Avg.time = 0.67ms
+WITH  L1 distance: OK -> Avg.time = 0.60ms
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+TESTING AND BENCHMARKING KNN WITH DIFFERENT DISTANCES...
+N = 4000 (D = 100, K = 10, trials# = 10)
+WITH cos distance: OK -> Avg.time = 1.18ms
+WITH  L2 distance: OK -> Avg.time = 0.99ms
+WITH dot distance: OK -> Avg.time = 1.03ms
+WITH  L1 distance: OK -> Avg.time = 1.03ms
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+TESTING AND BENCHMARKING KNN WITH DIFFERENT DISTANCES...
+N = 4000000 (D = 100, K = 10, trials# = 10)
+Data split in batches (batch_size = 100000)!
+WITH cos distance: OK -> Avg.time = 1902.27ms
+WITH  L2 distance: OK -> Avg.time = 1927.41ms
+WITH dot distance: OK -> Avg.time = 1905.19ms
+WITH  L1 distance: OK -> Avg.time = 1918.43ms
+_______________________________________
+
+
+
+BENCHMARKING KMEANS WITH DIFFERENT DISTANCES...
+D = 100 (N = 1000, K = 10, trials# = 10)
+WITH cos DISTANCE: Avg.time = 24.82ms, Avg.iters = 18.50
+WITH  L2 DISTANCE: Avg.time = 17.72ms, Avg.iters = 19.30
+WITH dot DISTANCE: Avg.time = 14.92ms, Avg.iters = 16.30
+WITH  L1 DISTANCE: Avg.time = 22.42ms, Avg.iters = 24.30
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+BENCHMARKING KMEANS WITH DIFFERENT DISTANCES...
+D = 2 (N = 1000, K = 10, trials# = 10)
+Device: cpu!
+WITH cos DISTANCE: Avg.time = 26.41ms, Avg.iters = 26.80
+WITH  L2 DISTANCE: Avg.time = 20.21ms, Avg.iters = 24.80
+WITH dot DISTANCE: Avg.time = 867.41ms, Avg.iters = 1000.00
+WITH  L1 DISTANCE: Avg.time = 24.47ms, Avg.iters = 28.70
+
+BENCHMARKING KMEANS WITH DIFFERENT DISTANCES...
+D = 2 (N = 1000, K = 10, trials# = 10)
+WITH cos DISTANCE: Avg.time = 26.89ms, Avg.iters = 24.90
+WITH  L2 DISTANCE: Avg.time = 27.27ms, Avg.iters = 29.30
+WITH dot DISTANCE: Avg.time = 1008.82ms, Avg.iters = 1000.00
+WITH  L1 DISTANCE: Avg.time = 25.86ms, Avg.iters = 28.40
+ -> Avg. GPU speedup = 0.88x
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+BENCHMARKING KMEANS WITH DIFFERENT DISTANCES...
+D = 1024 (N = 1000, K = 10, trials# = 10)
+Device: cpu!
+WITH cos DISTANCE: Avg.time = 210.62ms, Avg.iters = 5.10
+WITH  L2 DISTANCE: Avg.time = 268.26ms, Avg.iters = 6.40
+WITH dot DISTANCE: Avg.time = 198.36ms, Avg.iters = 4.80
+WITH  L1 DISTANCE: Avg.time = 831.54ms, Avg.iters = 10.80
+
+BENCHMARKING KMEANS WITH DIFFERENT DISTANCES...
+D = 1024 (N = 1000, K = 10, trials# = 10)
+WITH cos DISTANCE: Avg.time = 7.41ms, Avg.iters = 4.80
+WITH  L2 DISTANCE: Avg.time = 10.01ms, Avg.iters = 6.80
+WITH dot DISTANCE: Avg.time = 7.17ms, Avg.iters = 5.00
+WITH  L1 DISTANCE: Avg.time = 18.55ms, Avg.iters = 9.70
+ -> Avg. GPU speedup = 31.93x
+_______________________________________
+
+
+
+BENCHMARKING ANN WITH DIFFERENT DISTANCES...
+K_kmeans = 20, K_knn = 10 (N = 1000, D = 100, K = 10, trials# = 10)
+WITH cos distance -> recall_rate = 0.40, Avg.time = 18.38ms
+WITH  L2 distance -> recall_rate = 1.00, Avg.time = 14.37ms
+WITH dot distance -> recall_rate = 0.90, Avg.time = 13.36ms
+WITH  L1 distance -> recall_rate = 1.00, Avg.time = 20.61ms
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+BENCHMARKING ANN WITH DIFFERENT DISTANCES...
+K_kmeans = 10, K_knn = 5 (N = 1000, D = 100, K = 10, trials# = 10)
+WITH cos distance -> recall_rate = 0.50, Avg.time = 19.54ms
+WITH  L2 distance -> recall_rate = 0.60, Avg.time = 17.16ms
+WITH dot distance -> recall_rate = 0.60, Avg.time = 19.26ms
+WITH  L1 distance -> recall_rate = 0.80, Avg.time = 28.59ms
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+BENCHMARKING ANN WITH DIFFERENT DISTANCES...
+K_kmeans = 5, K_knn = 3 (N = 1000, D = 100, K = 10, trials# = 10)
+WITH cos distance -> recall_rate = 0.60, Avg.time = 28.04ms
+WITH  L2 distance -> recall_rate = 0.80, Avg.time = 20.58ms
+WITH dot distance -> recall_rate = 0.60, Avg.time = 22.97ms
+WITH  L1 distance -> recall_rate = 0.60, Avg.time = 34.41ms
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+BENCHMARKING ANN WITH DIFFERENT DISTANCES...
+K_kmeans = 3, K_knn = 1 (N = 1000, D = 100, K = 10, trials# = 10)
+WITH cos distance -> recall_rate = 0.30, Avg.time = 26.92ms
+WITH  L2 distance -> recall_rate = 0.20, Avg.time = 26.71ms
+WITH dot distance -> recall_rate = 0.80, Avg.time = 26.02ms
+WITH  L1 distance -> recall_rate = 0.30, Avg.time = 32.20ms
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _

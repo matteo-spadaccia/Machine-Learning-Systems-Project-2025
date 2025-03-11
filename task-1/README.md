@@ -5,6 +5,10 @@
 > ```shell
 > $ python task-1/task.py
 > ```
+> To save the output in a text file too:
+> ```shell
+> $ python -u task-1/task.py | tee output.txt
+> ```
 
 ## Part 1: KNN
 

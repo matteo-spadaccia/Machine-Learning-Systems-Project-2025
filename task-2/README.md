@@ -40,6 +40,10 @@ curl -X POST "http://localhost:8000/rag" -H "Content-Type: application/json" -d 
 > ```shell
 > $ python task-2/test_rag_load.py
 > ```
+> To save the output in a text file too:
+> ```shell
+> $ python -u task-2/test_rag_load.py | tee output.txt
+> ```
 
 ## Step 3:
 
