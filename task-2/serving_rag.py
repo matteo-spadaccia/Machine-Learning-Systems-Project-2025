@@ -5,6 +5,8 @@ from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
 
+outputMaxLength = 200 # Setting the desried output lenght
+
 app = FastAPI()
 
 # Example documents in memory
@@ -75,7 +77,7 @@ def rag_pipeline(query: str, k: int = 2) -> str:
     prompt = f"Question: {query}\nContext:\n{context}\nAnswer:"
     
     # Step 3: LLM Output
-    generated = chat_pipeline(prompt, max_length=200, do_sample=True)[0]["generated_text"]
+    generated = chat_pipeline(prompt, max_length=outputMaxLength, do_sample=True)[0]["generated_text"]
     return generated
 
 # Define request model

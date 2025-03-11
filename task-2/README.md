@@ -35,6 +35,12 @@ curl -X POST "http://localhost:8000/rag" -H "Content-Type: application/json" -d 
 
 1. Create a new script (bash or python) to test the service with different request rates. A reference implementation is [TraceStorm](https://github.com/ServerlessLLM/TraceStorm)
 
+> [!TIP]
+> To run the request-rates test script (after setting the desired output length in serving_rag.py and activating the service as above):
+> ```shell
+> $ python task-2/test_rag_load.py
+> ```
+
 ## Step 3:
 
 1. Implement a request queue to handle concurrent requests
