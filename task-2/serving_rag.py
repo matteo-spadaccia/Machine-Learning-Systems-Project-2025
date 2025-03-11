@@ -11,7 +11,19 @@ app = FastAPI()
 documents = [
     "Cats are small furry carnivores that are often kept as pets.",
     "Dogs are domesticated mammals, not natural wild animals.",
-    "Hummingbirds can hover in mid-air by rapidly flapping their wings."
+    "Hummingbirds can hover in mid-air by rapidly flapping their wings.",
+    "Parrots are intelligent birds known for mimicking human speech.",
+    "Rabbits are herbivorous mammals that often live in burrows.",
+    "Goldfish are small freshwater fish commonly kept in bowls or tanks.",
+    "Hamsters are small rodents frequently kept as household pets.",
+    "Turtles are reptiles with hard shells, often kept as low-maintenance pets.",
+    "Some birds, like pigeons and doves, are used in ceremonies and racing.",
+    "Ferrets are playful, carnivorous mammals often adopted as exotic pets.",
+    "Dogs are known for their loyalty and are trained for companionship, guarding, and assistance.",
+    "Cats exhibit independent behavior and are often more solitary than dogs.",
+    "Some animals, like hawks and falcons, are used in falconry.",
+    "Koi fish are ornamental varieties of the common carp and symbolize good luck.",
+    "Guinea pigs are sociable and vocal rodents originally from South America.",
 ]
 
 # 1. Load embedding model
@@ -63,7 +75,7 @@ def rag_pipeline(query: str, k: int = 2) -> str:
     prompt = f"Question: {query}\nContext:\n{context}\nAnswer:"
     
     # Step 3: LLM Output
-    generated = chat_pipeline(prompt, max_length=50, do_sample=True)[0]["generated_text"]
+    generated = chat_pipeline(prompt, max_length=200, do_sample=True)[0]["generated_text"]
     return generated
 
 # Define request model
