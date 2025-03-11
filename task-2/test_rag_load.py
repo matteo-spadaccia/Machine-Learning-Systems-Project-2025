@@ -12,8 +12,8 @@ test_queries_easy = [
     "Name a pet fish.",                                         # OK
     "What is a low-maintenance pet?",                           # OK
     "Which animals are kept in tanks or bowls?",                # INCORRECT (always: hamsters)
-    "Which pets are rodents?",                                  # OK
-    "What animal can mimick speech?",                           # OK
+    "Which pets are rodents?",                                  # INCORRECT (sometimes: rodents)
+    "What animal can mimick speech?",                           # INCORRECT (once: Yuri Gagarin)
     "Which pets are herbivores?",                               # OK
     "Which pets live in burrows?",                              # INCORRECT (sometimes: burrows)
     "What kind of animals are ferrets?"                         # INCORRECT (sometimes: ferrets)
@@ -73,13 +73,13 @@ def answer_printer(s):
     first_line = lines[0].strip()
     l = 0
     if (len(first_line) < 3 or 'answer' in first_line.lower()) and len(lines)>1: # In case the multi-answer mode is activated and the first line does not contain the answer
-        first_line = first_line+"\\n"+lines[1]
+        first_line = first_line+"\\n"+(lines[1] if len(lines[1])>3 else lines[1]+lines[2])
         l += 1
     first_line_sentences = first_line.split(". ")
     first_sentence = first_line_sentences[0].strip()
     s = 0
     if (len(first_sentence) < 5 or 'answer' in first_sentence.lower()) and len(first_line_sentences)>1: # In case the multi-answer mode is activated and the first sentence does not contain the answer
-        first_sentence = first_sentence+first_line_sentences[1]
+        first_sentence = first_sentence+". "+first_line_sentences[1]
         s += 1
     if len(first_line_sentences) > 1+l:
         return first_sentence + ". [continues...]"
