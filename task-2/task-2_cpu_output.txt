@@ -2,154 +2,388 @@
 ===== TESTING  0.10 requests/s (one request every 10.00s) ================== = = =
 Query                                                    |  Time  |  Answer
 ---------------------------------------------------------------------------- - - -
-What are common pet animals?                             |  1.41s |  Hamsters and dogs.
-Name a pet fish.                                         |  2.27s |  Goldfish.
-Which animals are kept in tanks or bowls?                |  2.78s |  hamsters
-Which pets are rodents?                                  |  3.07s |  Hamsters.
-What animal can mimick speech?                           |  2.60s |  Parrot
-Which animals can hover in the air?                      | 52.85s |  Hawks and falcons [continues in other line...]
-Which pets are herbivores?                               |  2.10s |  Rabbits.
-Which pets live in burrows?                              |  2.93s |  rabbits and hamsters.
-What is a low-maintenance pet?                           | 54.72s |  Hamsters and turtles are both considered good choices for those looking for low-maintenance pets. [continues...]
-What kind of animals are ferrets?                        |157.49s |  Ferrets and hamsters are both small animals that can be kept as pets. [continues...]
-How do whales communicate?                               |315.50s |  Whales use a variety of methods to communicate with each other. [continues...]
-What is the lifespan of an elephant?                     |351.79s |  60 years. [continues...]
-How reptiles and amphibians are different?               |461.22s |  The difference between dogs and other domesticated animals is that dogs were bred by humans to be companions. [continues...]
-Why do birds migrate?                                    |507.51s |  Birds migrate to find food, breed, or escape harsh weather conditions. [continues...]
-What are endangered species?                             |525.88s |  Endangered species are animals that are facing a high risk of extinction in the wild. [continues...]
-How does photosynthesis work?                            |541.28s |  Photosynthesis is the process by which plants use sunlight to convert carbon dioxide and water into glucose (a type of sugar) and oxygen. [continues...]
-What is a keystone species' role in an ecosystem?        |543.73s |  A keystone species plays a crucial role in maintaining the balance of an ecological system. [continues...]
-What is natural selection?                               |567.57s |  Natural selection is the process by which certain traits become more or less common in a population over time. [continues...]
-What causes animal extinction?                           |563.83s |  The correct answer is that the cause of animal extinction is habitat destruction. [continues...]
-What is the food chain in a forest ecosystem?            |561.61s |  The correct answer is: [continues in other line...]
-What makes parrots capable of mimicking speech?          |553.47s |  The ability to mimic speech is a unique trait found primarily in certain species of birds, including parrots. [continues...]
-Why are dogs considered loyal animals?                   |572.42s |  Dogs are considered loyal animals because they have evolved over thousands of years to be dependent on humans for their survival and well-being. [continues...]
-How do turtles differ from amphibians?                   |556.64s |  Turtles and dogs belong to different animal classes. [continues...]
-Are there behavioral differences between cats and dogs?  |554.37s |  Yes. [continues...]
-Are rabbits suitable pets for children?                  |549.48s |  Yes, rabbits can be considered suitable pets for children. [continues...]
-How do ferrets behave compared to other pets?            |530.69s |  Ferrets have a higher energy level and more active behavior than dogs. [continues...]
-What are the advantages of keeping fish as pets?         |541.67s |  Hamsters are smaller and more docile than dogs. [continues...]
-What roles do birds play in ecosystems and as pets?      |503.53s |  Birds can be beneficial to ecosystems by pollinating plants, dispersing seeds, and controlling insect populations. [continues...]
-What skills make dogs useful as assistance animals?      |524.95s |  B [continues in other line...]
-Why are guinea pigs considered sociable animals?         |515.28s |  Guinea pigs are considered sociable because they have a natural inclination to live in groups. [continues...]
+What are common pet animals?                             |  1.55s |  Hamsters and dogs.
+What is a low-maintenance pet?                           |  3.19s |  Turtles.
+Which animals are kept in tanks or bowls?                |  3.16s |  Hamsters.
+Which pets are rodents?                                  |  3.24s |  Rodents.
+What animal can mimick speech?                           |  2.64s |  Parrot
+Which animals can hover in the air?                      | 61.82s |  Parrots [continues in other line...]
+Name a pet fish.                                         | 62.92s |  Goldfish. [continues...]
+Which pets live in burrows?                              |  3.14s |  burrows.
+What kind of animals are ferrets?                        |  2.14s |  Ferrets.
+Which pets are herbivores?                               | 70.30s |  Rabbits are herbivores. [continues...]
+What is the lifespan of an elephant?                     |318.63s |  70 years. [continues...]
+How do whales communicate?                               |398.04s |  Whales use a complex system of sounds to communicate. [continues...]
+How reptiles and amphibians are different?               |434.91s |  Reptiles and amphibians are different because they belong to two distinct classes of animals. [continues...]
+Why do birds migrate?                                    |479.20s |  Birds migrate to find food or water during the winter months. [continues...]
+What are endangered species?                             |505.70s |  Some animals that are native to the United States and Canada but are now rare or extinct include the passenger pigeon, the American bison, and the Eskimo curlew. [continues...]
+How does photosynthesis work?                            |522.46s |  Photosynthesis is the process by which green plants use sunlight to convert carbon dioxide and water into oxygen and glucose. [continues...]
+What is a keystone species' role in an ecosystem?        |528.06s |  A keystone species is one whose presence or absence can dramatically affect the structure of a food web. [continues...]
+How do turtles differ from amphibians?                   |484.14s |  Turtles and dogs have different origins and characteristics. [continues...]
+What is natural selection?                               |549.46s |  Natural selection is a process by which organisms with traits that better enable them to survive and reproduce in their environment tend to have more offspring. [continues...]
+Why are guinea pigs considered sociable animals?         |449.42s |  Guinea pigs are sociable animals because they have a strong desire to be around other individuals of their species, which makes them excellent companions for humans. [continues...]
+What causes animal extinction?                           |549.90s |  The cause of animal extinction is the overhunting by humans. [continues...]
+What is the food chain in a forest ecosystem?            |544.54s |  Rabbits eat grass. [continues...]
+What makes parrots capable of mimicking speech?          |536.07s |  Parrots can mimic speech due to their highly developed brain structures and specialized vocal organs. [continues...]
+Are rabbits suitable pets for children?                  |508.94s |  Rabbits are not typically considered the best choice for children because they require a lot of space, food, and attention. [continues...]
+Why are dogs considered loyal animals?                   |552.24s |  Dogs are often seen as loyal animals because of their strong bond with humans. [continues...]
+Are there behavioral differences between cats and dogs?  |533.76s |  Yes. Cats are less social with humans than dogs are. [continues...]
+How do ferrets behave compared to other pets?            |507.30s |  Ferrets are much more energetic and active than dogs. [continues...]
+What are the advantages of keeping fish as pets?         |517.41s |  Fish have gills for breathing underwater and fins to move through water. [continues...]
+What roles do birds play in ecosystems and as pets?      |479.76s |  Birds have many important roles in the ecosystem. [continues...]
+What skills make dogs useful as assistance animals?      |499.98s |  The skill that makes dogs useful as assistance animals is their ability to understand and follow commands. [continues...]
 ---------------------------------------------------------------------------- - - -
 Completed 30 requests at  0.10 requests/s!
-Average response time: 354.16s
+Average response time: 337.13s
 ============================================================================ = = =
 
 
 ===== TESTING  0.25 requests/s (one request every  4.00s) ================== = = =
 Query                                                    |  Time  |  Answer
 ---------------------------------------------------------------------------- - - -
-What are common pet animals?                             |  1.73s |  Hamsters and dogs.
-Name a pet fish.                                         |  2.07s |  Goldfish.
-What is a low-maintenance pet?                           |  2.17s |  Turtles.
-Which animals are kept in tanks or bowls?                |  1.72s |  hamsters
-Which pets are rodents?                                  |  2.11s |  Hamsters.
-What animal can mimick speech?                           |  1.73s |  Parrot
-Which pets live in burrows?                              |  4.43s |  rabbits and hamsters.
-What kind of animals are ferrets?                        |  3.37s |  Ferrets.
-Which animals can hover in the air?                      | 35.70s |  Parrots [continues in other line...]
-What is a keystone species' role in an ecosystem?        |392.47s |  A keystone species is one that has a large effect on its environment. [continues...]
-Which pets are herbivores?                               |475.59s |  Rabbits are herbivores. [continues...]
-What is the lifespan of an elephant?                     |568.12s |  70 years. [continues...]
-How do whales communicate?                               |595.52s |  Whales use a complex system of sounds to communicate with each other. [continues...]
-How reptiles and amphibians are different?               |603.64s |  Reptiles and amphibians are both cold-blooded vertebrates that typically live on land. [continues...]
-How do turtles differ from amphibians?                   |593.17s |  Turtles are reptiles and have hard shells, while dogs are domesticated mammals. [continues...]
-Why do birds migrate?                                    |629.96s |  Some birds migrate to escape extreme temperatures, while others travel long distances to follow the changing seasons. [continues...]
-What are endangered species?                             |642.06s |  The answer is 1. [continues...]
-How does photosynthesis work?                            |640.96s |  Photosynthesis is a process used by plants to convert light energy into chemical energy. [continues...]
-What is the food chain in a forest ecosystem?            |644.09s |  The food chain in a forest ecosystem consists of producers (plants), primary consumers (herbivores), and secondary consumers (carnivores). [continues...]
-What makes parrots capable of mimicking speech?          |637.78s |  Intelligence. [continues...]
-What causes animal extinction?                           |651.11s |  Animals go extinct because of human activities. [continues...]
-What is natural selection?                               |661.74s |  Natural selection is the process by which organisms with traits that better enable them to survive and reproduce leave more offspring. [continues...]
-Why are dogs considered loyal animals?                   |656.70s |  Dogs are considered loyal animals because they have been selectively bred for thousands of years to form close bonds with humans. [continues...]
-Are there behavioral differences between cats and dogs?  |646.06s |  Yes, there are behavioral differences between cats and dogs. [continues...]
-What roles do birds play in ecosystems and as pets?      |622.29s |  Birds can be beneficial to the ecosystem by pollinating plants and dispersing seeds. [continues...]
-How do ferrets behave compared to other pets?            |634.81s |  Ferrets tend to be more active and curious than dogs. [continues...]
-Are rabbits suitable pets for children?                  |643.97s |  Yes, rabbits can be a great choice of pet for children. [continues...]
-What are the advantages of keeping fish as pets?         |640.98s |  Fish can be great pets for people who enjoy spending time in water and want to keep a pet that is both cute and low-maintenance. [continues...]
-Why are guinea pigs considered sociable animals?         |629.41s |  To answer the question, consider the following facts: Guinea pigs are known for their social nature, often forming strong bonds with each other. [continues...]
-What skills make dogs useful as assistance animals?      |633.66s |  The answer is 1) the ability to learn and imitate sounds. [continues...]
+What are common pet animals?                             |  1.65s |  Hamsters and dogs.
+Which animals can hover in the air?                      |  1.08s |  Parrots.
+Which animals are kept in tanks or bowls?                |  3.09s |  Hamsters.
+Which pets live in burrows?                              |  6.91s |  burrows.
+Why do birds migrate?                                    |169.71s |  Birds of prey are often trained to hunt with their master. [continues...]
+How do turtles differ from amphibians?                   |377.06s |  Turtles have a hard shell that protects them from predators. [continues...]
+What kind of animals are ferrets?                        |475.93s |  Ferrets and hamsters are both types of mammals that can be kept as pets. [continues...]
+Name a pet fish.                                         |539.54s |  Goldfish [continues in other line...]
+What is a low-maintenance pet?                           |590.19s |  Hamster [continues in other line...]
+Why are guinea pigs considered sociable animals?         |491.69s |  To answer the question, consider that Guinea pigs are known for their social nature and vocalizations. They live in groups called colonies and enjoy interacting with other guinea pigs. [continues...]
+Which pets are herbivores?                               |640.19s |  The correct answer is Rabbits. Rabbits are herbivores and they often live in burrows. [continues...]
+Which pets are rodents?                                  |690.73s |  Rodents [continues in other line...]
+What animal can mimick speech?                           |699.71s |  Yuri Gagarin. [continues...]
+Are there behavioral differences between cats and dogs?  |654.12s |  Yes.  Cats and dogs have different behaviors.. [continues...]
+How reptiles and amphibians are different?               |722.72s |  The answer to the question "How reptiles and amphibians are different?" is that they have a variety of physical characteristics. Reptiles generally have dry skin with scales or scutes, while amphibians may have moist skin. [continues...]
+How do whales communicate?                               |727.72s |  Whales use a variety of vocalizations to communicate with each other. [continues...]
+What is the lifespan of an elephant?                     |733.86s |  60 years. [continues...]
+What is a keystone species' role in an ecosystem?        |718.22s |  A keystone species plays a crucial role in maintaining the balance of an ecosystem. [continues...]
+What are endangered species?                             |739.82s |  Some animals that are naturally found in the wild but are at risk of becoming extinct or being seriously threatened with extinction because their populations have declined to a point where they may be wiped out in the foreseeable future. [continues...]
+How does photosynthesis work?                            |737.30s |  Photosynthesis is the process by which green plants use sunlight to convert carbon dioxide from the air into oxygen and glucose (a type of sugar). [continues...]
+What is the food chain in a forest ecosystem?            |727.01s |  The food chain in a forest ecosystem includes plants and other organisms that are eaten by rabbits. [continues...]
+What makes parrots capable of mimicking speech?          |721.40s |  Parrots are able to mimic speech because they have a highly developed brain with an area called the Wernicke's area that is responsible for language comprehension. [continues...]
+What causes animal extinction?                           |734.27s |  The answer is A. Overhunting.\nOverhunting has caused the extinction of many species of large herbivores that once roamed North America. [continues...]
+What is natural selection?                               |745.55s |  Natural selection is the process by which organisms with advantageous traits survive and pass those traits to their offspring more often than organisms without those traits. [continues...]
+What roles do birds play in ecosystems and as pets?      |696.62s |  Birds have been important to humans since prehistoric times. [continues...]
+How do ferrets behave compared to other pets?            |710.48s |  Ferrets are much more energetic and active than dogs. [continues...]
+Why are dogs considered loyal animals?                   |735.29s |  Dogs are considered loyal because they have a strong bond with their human companions. [continues...]
+What are the advantages of keeping fish as pets?         |716.12s |  Hamsters are popular household pets due to their cute appearance and low maintenance requirements. [continues...]
+Are rabbits suitable pets for children?                  |720.28s |  Yes, rabbits can be suitable pets for children. [continues...]
+What skills make dogs useful as assistance animals?      |708.66s |  B. The ability to understand and respond to commands, trainability, and the capacity to provide emotional support.. [continues...]
 ---------------------------------------------------------------------------- - - -
 Completed 30 requests at  0.25 requests/s!
-Average response time: 429.97s
+Average response time: 564.56s
 ============================================================================ = = =
 
 
 ===== TESTING  0.50 requests/s (one request every  2.00s) ================== = = =
 Query                                                    |  Time  |  Answer
 ---------------------------------------------------------------------------- - - -
-What are common pet animals?                             |  1.73s |  Hamsters and dogs.
-Which animals can hover in the air?                      |  1.53s |  Parrots.
-Name a pet fish.                                         |  1.26s |  Goldfish.
-What is a low-maintenance pet?                           |  1.22s |  Turtles.
-Which animals are kept in tanks or bowls?                |  1.24s |  Hamsters.
-Which pets are rodents?                                  |  1.10s |  Hamsters.
-Which pets live in burrows?                              |  3.67s |  burrows.
-What kind of animals are ferrets?                        |643.63s |  Ferrets and hamsters are both types of small animals that can be kept as pets. [continues...]
-What animal can mimick speech?                           |667.28s |  Parrot. [continues...]
-Which pets are herbivores?                               |696.09s |  Rabbits. [continues...]
-How reptiles and amphibians are different?               |729.25s |  Reptiles and amphibians are both cold-blooded vertebrates that lack a constant body temperature. [continues...]
-How do whales communicate?                               |741.87s |  Whales use a complex system of sounds to communicate with each other. [continues...]
-What is the lifespan of an elephant?                     |744.51s |  60 years. [continues...]
-What is a keystone species' role in an ecosystem?        |732.11s |  A keystone species is one that has a disproportionately large effect on its environment. [continues...]
-Why do birds migrate?                                    |749.89s |  Birds migrate to find food and avoid harsh weather conditions. [continues...]
-What are endangered species?                             |753.53s |  Endangered species are those that are at risk of becoming extinct. [continues...]
-What is the food chain in a forest ecosystem?            |745.03s |  The food chain in a forest ecosystem includes producers (plants), primary consumers (herbivores), secondary consumers (carnivores), and tertiary consumers (top carnivores). [continues...]
-How does photosynthesis work?                            |753.90s |  Photosynthesis is the process by which green plants use sunlight to convert carbon dioxide and water into glucose (a type of sugar) and oxygen. [continues...]
-What roles do birds play in ecosystems and as pets?      |731.33s |  Birds can be important pollinators. [continues...]
-What causes animal extinction?                           |754.39s |  A. [continues...]
-How do turtles differ from amphibians?                   |746.41s |  Turtles and dogs are both types of animals, but they belong to different categories. [continues...]
-What makes parrots capable of mimicking speech?          |749.39s |  Parrots are capable of mimicking speech due to their high intelligence and vocal abilities. [continues...]
-How do ferrets behave compared to other pets?            |741.84s |  Ferrets are known for their high energy and playful nature. [continues...]
-Are there behavioral differences between cats and dogs?  |749.52s |  Yes. [continues...]
-What is natural selection?                               |763.82s |  Natural selection occurs when organisms with traits that make them better suited to their environment survive and reproduce more than those without the same advantageous traits. [continues...]
-Why are dogs considered loyal animals?                   |757.16s |  Dogs are considered loyal because they have evolved over thousands of years to live and thrive in human households. [continues...]
-Are rabbits suitable pets for children?                  |749.48s |  Yes, rabbits can be considered a good choice for children to have as pets. [continues...]
-What are the advantages of keeping fish as pets?         |747.55s |  The question appears to mix information about hamsters and dogs. [continues...]
-Why are guinea pigs considered sociable animals?         |741.73s |  Guinea pigs are sociable animals because they are originally from South America where they live in large groups. [continues...]
-What skills make dogs useful as assistance animals?      |743.84s |  The answer is C. [continues...]
+What are common pet animals?                             |  1.81s |  Hamsters and dogs.
+Which animals can hover in the air?                      |  1.17s |  Parrots
+Which animals are kept in tanks or bowls?                |  2.92s |  hamsters
+Which pets are rodents?                                  |  3.84s |  Hamsters.
+What animal can mimick speech?                           |  3.40s |  Parrot
+Which pets live in burrows?                              |  7.88s |  rabbits and hamsters.
+What is a low-maintenance pet?                           | 83.10s |  Turtles [continues in other line...]
+Why do birds migrate?                                    |225.03s |  Birds migrate to escape harsh weather conditions. [continues...]
+Why are dogs considered loyal animals?                   |554.50s |  Dogs are considered loyal animals because they have a strong bond with their human companions. [continues...]
+Name a pet fish.                                         |643.54s |  Goldfish. [continues in other line...]
+Which pets are herbivores?                               |701.23s |  Herbiv
+What kind of animals are ferrets?                        |716.55s |  Ferrets and hamsters are both small animals that can be kept as pets. [continues...]
+How reptiles and amphibians are different?               |718.86s |  Reptiles and amphibians are both classified as cold-blooded vertebrates. [continues...]
+What is a keystone species' role in an ecosystem?        |714.58s |  A keystone species is one that plays a crucial role in its ecosystem. [continues...]
+How do whales communicate?                               |729.92s |  Whales communicate through a series of sounds called songs. [continues...]
+What is the lifespan of an elephant?                     |732.69s |  70 years. [continues...]
+How does photosynthesis work?                            |733.34s |  Photosynthesis is a process that plants use to convert light energy into chemical energy. [continues...]
+What is the food chain in a forest ecosystem?            |725.98s |  The food chain in a forest ecosystem consists of various organisms feeding on each other. [continues...]
+What are endangered species?                             |736.56s |  Endangered species are groups of living organisms that have been threatened by environmental changes or human activities. [continues...]
+What makes parrots capable of mimicking speech?          |722.67s |  Parrots are able to mimic speech because they have a large brain dedicated to learning new sounds. [continues...]
+How do turtles differ from amphibians?                   |724.90s |  Turtles have hard shells made of bone and protective layers that provide protection for their bodies. [continues...]
+What causes animal extinction?                           |733.70s |  Some animals, like hawks and falcons, are used in falconry. [continues...]
+What roles do birds play in ecosystems and as pets?      |712.73s |  Birds have a significant impact on the environment by pollinating plants, dispersing seeds, controlling insect populations, and aiding in seed dispersal. [continues...]
+How do ferrets behave compared to other pets?            |720.84s |  Ferrets are more active and energetic than dogs. [continues...]
+Are there behavioral differences between cats and dogs?  |728.17s |  The answer is yes. Cats and dogs have different behaviors that distinguish them from each other.. [continues...]
+Why are guinea pigs considered sociable animals?         |719.17s |  Guinea pigs are social animals that enjoy spending time with other guinea pigs. [continues...]
+What is natural selection?                               |743.76s |  Natural selection is a process in which organisms with traits that better enable them to survive and reproduce leave more offspring. [continues...]
+Are rabbits suitable pets for children?                  |727.93s |  Rabbits are not typically considered safe or appropriate pets for children. [continues...]
+What are the advantages of keeping fish as pets?         |726.34s |  The advantages of keeping hamsters as pets include their ability to be easily cared for and trained, which makes them a popular choice among households. [continues...]
+What skills make dogs useful as assistance animals?      |722.56s |  The answer to the question "What skills make dogs useful as assistance animals?" is that dogs have a wide range of abilities that can be adapted and trained to assist humans in various ways. Dogs possess several skills that make them ideal companions and aids:. [continues...]
 ---------------------------------------------------------------------------- - - -
 Completed 30 requests at  0.50 requests/s!
-Average response time: 564.84s
+Average response time: 533.99s
 ============================================================================ = = =
 
 
 ===== TESTING  1.00 requests/s (one request every  1.00s) ================== = = =
 Query                                                    |  Time  |  Answer
 ---------------------------------------------------------------------------- - - -
-What are common pet animals?                             |  2.23s |  hamsters and dogs.
-What is a low-maintenance pet?                           |  4.60s |  Turtles.
-Which animals are kept in tanks or bowls?                |  6.03s |  Hamsters.
-Which pets are rodents?                                  |  5.27s |  hamsters
-What animal can mimick speech?                           |  5.94s |  Parrot
-Which pets are herbivores?                               |  8.31s |  Rabbits.
-What kind of animals are ferrets?                        |  9.56s |  Ferrets.
-Which pets live in burrows?                              | 17.78s |  Rabbits and hamsters.
-What is the lifespan of an elephant?                     |207.04s |  60 years [continues in other line...]
-How do ferrets behave compared to other pets?            |395.44s |  Ferrets are more active and curious than dogs. [continues...]
-Which animals can hover in the air?                      |581.43s |  Hawks and falcons. [continues...]
-How do turtles differ from amphibians?                   |619.87s |  Turtles have a hard shell that provides protection, while dogs have fur and are not naturally wild. [continues...]
-Are rabbits suitable pets for children?                  |640.95s |  Rabbits are not recommended as pets for children due to their size, potential aggression, and the need for a large enclosure. [continues...]
-Name a pet fish.                                         |683.38s |  Goldfish. [continues...]
-How reptiles and amphibians are different?               |677.08s |  The answer is that reptiles and amphibians are cold-blooded vertebrates that lay eggs. [continues...]
-What is a keystone species' role in an ecosystem?        |674.42s |  A keystone species is one whose presence or absence has a disproportionately large effect on the structure of its ecological community. [continues...]
-What makes parrots capable of mimicking speech?          |674.39s |  Birds that can mimic speech include parrots. [continues...]
-How do whales communicate?                               |687.99s |  Whales use a variety of vocalizations to communicate with each other. [continues...]
-What roles do birds play in ecosystems and as pets?      |672.09s |  Birds can be found in almost every habitat on Earth. [continues...]
-How does photosynthesis work?                            |686.31s |  Photosynthesis is the process by which plants convert light energy into chemical energy. [continues...]
-What is the food chain in a forest ecosystem?            |683.97s |  Rabbits eat grass and other plants. [continues...]
-Why do birds migrate?                                    |691.10s |  Birds of prey use their keen eyesight to hunt their prey. [continues...]
-What are endangered species?                             |691.08s |  Endangered species are those that are at risk of becoming extinct. [continues...]
-What causes animal extinction?                           |688.27s |  The main cause of animal extinction is habitat destruction. [continues...]
-Why are guinea pigs considered sociable animals?         |681.07s |  To answer the question about why guinea pigs are considered sociable, we need to consider their natural habitat and behavior. [continues...]
-Are there behavioral differences between cats and dogs?  |686.30s |  Yes. [continues...]
-What skills make dogs useful as assistance animals?      |683.11s |  The answer is that the skill of being able to communicate with humans through speech or sign language. [continues...]
-What are the advantages of keeping fish as pets?         |685.15s |  Fish can be kept in a tank with water and some plants. [continues...]
-Why are dogs considered loyal animals?                   |690.79s |  Dogs have a strong instinct to protect their owners and family members. [continues...]
-What is natural selection?                               |694.84s |  Natural selection occurs when individuals with certain traits survive and reproduce more often than those without the same trait. [continues...]
+What are common pet animals?                             |  1.79s |  hamsters and dogs.
+What is a low-maintenance pet?                           |  4.55s |  Turtles.
+Which animals are kept in tanks or bowls?                |  5.68s |  Hamsters.
+Which pets are rodents?                                  |  5.10s |  Hamsters
+What animal can mimick speech?                           |  6.87s |  Parrot.
+Which pets are herbivores?                               |208.32s |  Rabbits. [continues...]
+How do turtles differ from amphibians?                   |537.85s |  Turtles have a hard shell that protects them from predators and helps them stay warm in cold environments. [continues...]
+Which animals can hover in the air?                      |603.53s |  Parrots. [continues...]
+Which pets live in burrows?                              |635.21s |  Burrowing animals [continues in other line...]
+Name a pet fish.                                         |772.31s |  Goldfish. [continues...]
+What is a keystone species' role in an ecosystem?        |760.26s |  A keystone species plays a crucial role in its ecosystem by affecting the population sizes of other organisms. [continues...]
+How reptiles and amphibians are different?               |766.29s |  The answer is that dogs are domesticated mammals, while hawks and falcons are birds of prey. Dogs have been selectively bred by humans for thousands of years for various purposes such as companionship, assistance, and hunting. [continues...]
+What kind of animals are ferrets?                        |773.98s |  Ferrets and hamsters are both small mammals that are commonly kept as pets. [continues...]
+What makes parrots capable of mimicking speech?          |763.15s |  Parrots are capable of mimicking speech due to their highly developed brains and vocal cords. [continues...]
+What is the food chain in a forest ecosystem?            |769.34s |  To answer this question, we need to understand the basic structure of a food chain and how it applies to a forest ecosystem. A food chain shows the feeding relationships between organisms within an environment. [continues...]
+How do whales communicate?                               |777.91s |  Whales use a complex system of sound called echolocation to communicate. [continues...]
+What roles do birds play in ecosystems and as pets?      |761.90s |  Birds play important ecological roles by pollinating plants and dispersing seeds. [continues...]
+Why do birds migrate?                                    |779.19s |  Birds migrate to avoid the harsh winter conditions. [continues...]
+What are endangered species?                             |779.66s |  The term "endangered species" refers to animal or plant species that are at risk of becoming extinct. [continues...]
+How does photosynthesis work?                            |779.21s |  Photosynthesis is the process by which plants convert light energy into chemical energy. [continues...]
+How do ferrets behave compared to other pets?            |768.64s |  Ferrets are more active and curious than dogs. [continues...]
+What causes animal extinction?                           |777.89s |  There is no specific cause of animal extinction. [continues...]
+What is the lifespan of an elephant?                     |786.53s |  60 years. [continues...]
+Why are guinea pigs considered sociable animals?         |769.80s |  To answer this question, we need to consider the nature of guinea pigs' behavior and how it differs from hamsters. The key point is that guinea pigs are known for their social nature, which contrasts with many other rodent species.. [continues...]
+Are there behavioral differences between cats and dogs?  |776.36s |  Yes.  Dogs have been selectively bred for centuries to be loyal companions. [continues...]
+What are the advantages of keeping fish as pets?         |774.61s |  Fish [continues in other line...]
+Are rabbits suitable pets for children?                  |775.82s |  Rabbits are not typically considered suitable pets for children. [continues...]
+What is natural selection?                               |784.93s |  Natural selection is the process by which organisms that possess characteristics better suited to their environment tend to survive and reproduce in greater numbers than those with less advantageous traits. [continues...]
+Why are dogs considered loyal animals?                   |780.95s |  Dogs are considered loyal because they have evolved to be highly social creatures that thrive on companionship. [continues...]
+What skills make dogs useful as assistance animals?      |773.96s |  obedience, training, socialization [continues in other line...]
 ---------------------------------------------------------------------------- - - -
 Completed 30 requests at  1.00 requests/s!
-Average response time: 471.19s
+Average response time: 608.72s
+============================================================================ = = =
+
+
+===== TESTING  2.00 requests/s (one request every  0.50s) ================== = = =
+Query                                                    |  Time  |  Answer
+---------------------------------------------------------------------------- - - -
+Which animals can hover in the air?                      |  2.66s |  parrots
+What are common pet animals?                             |  3.32s |  Hamsters and dogs.
+Which animals are kept in tanks or bowls?                |  6.43s |  hamsters
+What is a low-maintenance pet?                           |  7.40s |  Turtles.
+What animal can mimick speech?                           |  8.86s |  Parrot
+Which pets are rodents?                                  | 12.38s |  Hamsters.
+Which pets are herbivores?                               | 16.47s |  Rabbits.
+Which pets live in burrows?                              | 17.60s |  burrows.
+What is the lifespan of an elephant?                     |599.35s |  70 years. [continues...]
+What makes parrots capable of mimicking speech?          |618.75s |  Parrots are capable of mimicking speech because they have a highly developed cerebellum, which is crucial for learning and imitation. [continues...]
+Are rabbits suitable pets for children?                  |686.75s |  No, rabbits are not typically considered suitable pets for children. [continues...]
+What is a keystone species' role in an ecosystem?        |704.13s |  A keystone species plays a crucial role in its ecosystem by influencing the structure of other parts of that system. [continues...]
+How reptiles and amphibians are different?               |711.93s |  Reptiles and amphibians are both cold-blooded vertebrates that do not produce their own body heat. [continues...]
+What roles do birds play in ecosystems and as pets?      |705.10s |  Birds play a crucial role in many ecosystems by acting as pollinators and seed dispersers. [continues...]
+How do turtles differ from amphibians?                   |715.89s |  Turtles and dogs have different evolutionary origins and characteristics. [continues...]
+What is the food chain in a forest ecosystem?            |717.45s |  The food chain in a forest ecosystem typically starts with producers (plants), followed by primary consumers (herbivores) and secondary consumers (carnivores). [continues...]
+How does photosynthesis work?                            |721.15s |  Photosynthesis is the process by which green plants use sunlight to convert carbon dioxide and water into glucose (a type of sugar) and oxygen. [continues...]
+How do ferrets behave compared to other pets?            |717.09s |  Ferrets are known for their high energy and curiosity. [continues...]
+What are endangered species?                             |724.94s |  Endangered species are those that are at risk of becoming extinct. [continues...]
+Why do birds migrate?                                    |725.98s |  Birds of prey, such as the hawk or falcon, are often kept by humans who train them to hunt game. [continues...]
+How do whales communicate?                               |727.10s |  Whales communicate through a series of clicks, whistles, and other vocalizations that they use to navigate, find food, and maintain social bonds. [continues...]
+Why are guinea pigs considered sociable animals?         |718.95s |  Guinea pigs are considered sociable animals because they have a strong social nature. [continues...]
+What kind of animals are ferrets?                        |728.51s |  Ferrets and hamsters are both small animals that can be kept as pets. [continues...]
+What causes animal extinction?                           |724.02s |  Predation by other species. [continues...]
+Are there behavioral differences between cats and dogs?  |721.69s |  Yes. Cats are solitary animals that prefer to be on their own while dogs tend to be social animals that enjoy spending time with people.. [continues...]
+Name a pet fish.                                         |732.73s |  Goldfish [continues in other line...]
+What are the advantages of keeping fish as pets?         |721.80s |  1. They require less space than hamsters. [continues...]
+What skills make dogs useful as assistance animals?      |721.19s |  The ability of a dog to understand and follow commands makes them useful in various situations. [continues...]
+What is natural selection?                               |727.64s |  Natural selection is the process by which certain traits become more or less common in a population over time. [continues...]
+Why are dogs considered loyal animals?                   |725.73s |  Dogs are often regarded as loyal animals because they have evolved to be highly social creatures. [continues...]
+---------------------------------------------------------------------------- - - -
+Completed 30 requests at  2.00 requests/s!
+Average response time: 522.43s
+============================================================================ = = =
+
+
+===== TESTING  5.00 requests/s (one request every  0.20s) ================== = = =
+Query                                                    |  Time  |  Answer
+---------------------------------------------------------------------------- - - -
+Which animals can hover in the air?                      | 12.04s |  parrots
+Which animals are kept in tanks or bowls?                | 18.54s |  hamsters
+What animal can mimick speech?                           | 19.26s |  Parrot
+Which pets are rodents?                                  | 24.60s |  Rodents.
+Which pets are herbivores?                               | 26.06s |  Rabbits.
+Which pets live in burrows?                              | 26.33s |  burrows.
+What kind of animals are ferrets?                        | 27.13s |  Ferrets.
+What is the food chain in a forest ecosystem?            |642.33s |  Rabbits eat grass. [continues...]
+What is a keystone species' role in an ecosystem?        |744.55s |  A keystone species is one whose actions have such a significant impact on its ecosystem that the removal of it would lead to a cascade effect throughout the food chain. [continues...]
+What roles do birds play in ecosystems and as pets?      |747.73s |  Birds can be beneficial to the environment by pollinating flowers. [continues...]
+What makes parrots capable of mimicking speech?          |753.96s |  To answer this question, we need to consider the unique characteristics that make parrots particularly adept at mimicking speech. Parrots have a highly developed vocal tract with a large number of muscles that control airflow through their beaks. [continues...]
+What is a low-maintenance pet?                           |761.34s |  Turtles. [continues...]
+How do turtles differ from amphibians?                   |759.73s |  Turtles and dogs belong to different categories of animal. [continues...]
+How reptiles and amphibians are different?               |762.07s |  Reptiles and amphibians share several similarities, including their cold-blooded nature, which means they rely on external sources of heat to regulate their body temperature. [continues...]
+How do ferrets behave compared to other pets?            |761.08s |  Ferrets are playful and active animals that require a lot of attention and exercise. [continues...]
+How does photosynthesis work?                            |767.16s |  Photosynthesis is the process by which green plants use sunlight to convert carbon dioxide from the air into glucose and oxygen. [continues...]
+Why do birds migrate?                                    |768.78s |  Birds that live near the equator often have to migrate. [continues...]
+What are endangered species?                             |768.65s |  Animals that are native to a particular region of the world but have become so rare or few in number as to be in danger of becoming extinct. [continues in other line...]
+Why are guinea pigs considered sociable animals?         |767.82s |  Guinea pigs are sociable because they were originally found in the Andes mountains of Peru, Bolivia, and Ecuador. [continues...]
+How do whales communicate?                               |771.28s |  Whales use a complex system of sounds to communicate with each other. [continues...]
+What causes animal extinction?                           |770.31s |  Predation is the primary cause of animal extinction. [continues...]
+Are there behavioral differences between cats and dogs?  |769.73s |  Cats and dogs have different behaviors. [continues...]
+What are common pet animals?                             |775.90s |  hamsters
+What skills make dogs useful as assistance animals?      |770.87s |  To answer this question correctly, we need to identify the key skills that make dogs useful in the context of being assistance animals. Assistance animals, such as guide dogs or hearing aids, require specific abilities and training.. [continues...]
+What are the advantages of keeping fish as pets?         |771.29s |  Fish keepers need to provide food and water for their fish. [continues...]
+What is the lifespan of an elephant?                     |774.55s |  60 years. [continues...]
+Are rabbits suitable pets for children?                  |771.76s |  Yes, rabbits can be suitable pets for children. [continues...]
+Why are dogs considered loyal animals?                   |773.81s |  Dogs have been bred over centuries to exhibit a strong sense of loyalty and companionship towards humans. [continues...]
+Name a pet fish.                                         |777.66s |  Goldfish. [continues...]
+What is natural selection?                               |774.89s |  Natural selection is a mechanism of evolution in which organisms with traits that better enable them to survive and reproduce leave more offspring. [continues...]
+---------------------------------------------------------------------------- - - -
+Completed 30 requests at  5.00 requests/s!
+Average response time: 588.71s
+============================================================================ = = =
+
+
+===== TESTING 10.00 requests/s (one request every  0.10s) ================== = = =
+Query                                                    |  Time  |  Answer
+---------------------------------------------------------------------------- - - -
+Which animals are kept in tanks or bowls?                | 21.96s |  hamsters
+What animal can mimick speech?                           | 21.90s |  Parrot
+What is a low-maintenance pet?                           | 27.11s |  Turtles.
+Which pets are rodents?                                  | 27.16s |  Hamsters.
+Which pets are herbivores?                               | 28.10s |  Rabbits.
+What are common pet animals?                             | 33.46s |  Hamsters and dogs.
+Which animals can hover in the air?                      | 34.77s |  Hawks and falcons.
+Which pets live in burrows?                              | 38.47s |  rabbits and hamsters.
+What skills make dogs useful as assistance animals?      |631.53s |  The skill of being able to understand and respond to verbal commands is a key attribute that makes dogs useful in various capacities. [continues...]
+Why are dogs considered loyal animals?                   |691.53s |  Dogs are considered loyal animals because they have a strong instinct to protect their owners and family. [continues...]
+What is a keystone species' role in an ecosystem?        |717.19s |  Keystone species play a crucial role in maintaining the balance of their ecosystems. [continues...]
+What roles do birds play in ecosystems and as pets?      |718.04s |  Birds have a significant role in many ecosystems. [continues...]
+How reptiles and amphibians are different?               |725.52s |  Reptiles are cold-blooded vertebrates that do not produce their own body heat. [continues...]
+What makes parrots capable of mimicking speech?          |724.89s |  The ability to mimic speech is a complex skill that involves not only the brain but also specialized vocal cords. [continues...]
+What is the food chain in a forest ecosystem?            |725.82s |  To answer this question, let's break down the information given and think step-by-step:\n1. Dogs are domesticated mammals, which means they were once wild but have been bred by humans to be companions. [continues in other line...]
+How do turtles differ from amphibians?                   |727.37s |  Turtles and dogs belong to different animal classes. [continues...]
+How do ferrets behave compared to other pets?            |728.85s |  Ferrets are much more active and playful than dogs. [continues...]
+How does photosynthesis work?                            |734.99s |  Photosynthesis is the process by which plants convert light energy into chemical energy. [continues...]
+Are there behavioral differences between cats and dogs?  |735.17s |  Cats are generally considered to be less social with other species of animals compared to dogs. [continues...]
+Why are guinea pigs considered sociable animals?         |734.68s |  Guinea pigs are sociable animals because they are originally from South America. [continues...]
+What kind of animals are ferrets?                        |737.40s |  Ferrets and hamsters are both small, furry animals that can make great pets. [continues...]
+What causes animal extinction?                           |736.56s |  The correct answer is that human activities such as habitat destruction, hunting, pollution, climate change, and the introduction of invasive species cause animal extinctions. Dogs are domesticated mammals and are not considered to be a type of extinct animal. [continues...]
+Why do birds migrate?                                    |737.50s |  Birds that fly long distances to find food or breeding grounds are called migratory birds. [continues...]
+What are endangered species?                             |737.94s |  The term "endangered" is applied to a group of animals when their numbers have decreased significantly. [continues...]
+Are rabbits suitable pets for children?                  |736.94s |  Rabbits [continues in other line...]
+How do whales communicate?                               |738.51s |  Whales use a complex system of sounds to communicate. [continues...]
+What are the advantages of keeping fish as pets?         |737.93s |  Hamsters make great pets because they are intelligent and playful. [continues...]
+What is the lifespan of an elephant?                     |739.83s |  60 years. [continues...]
+What is natural selection?                               |740.54s |  Natural selection is a mechanism of evolution that states organisms with traits better suited to their environment tend to survive and reproduce more than those without the advantageous traits. [continues...]
+Name a pet fish.                                         |742.09s |  Goldfish [continues in other line...]
+---------------------------------------------------------------------------- - - -
+Completed 30 requests at 10.00 requests/s!
+Average response time: 540.46s
+============================================================================ = = =
+
+
+===== TESTING 20.00 requests/s (one request every  0.05s) ================== = = =
+Query                                                    |  Time  |  Answer
+---------------------------------------------------------------------------- - - -
+What animal can mimick speech?                           | 23.51s |  Parrots
+What is a low-maintenance pet?                           | 28.65s |  Turtles.
+Which pets are rodents?                                  | 28.72s |  Hamsters.
+Which animals are kept in tanks or bowls?                | 28.95s |  Hamsters.
+Which pets are herbivores?                               | 29.15s |  Rabbits.
+What are common pet animals?                             | 37.12s |  Hamsters and dogs.
+Which animals can hover in the air?                      | 38.33s |  Hawks and falcons.
+Which pets live in burrows?                              | 44.26s |  Rabbits and hamsters.
+Why do birds migrate?                                    |171.89s |  Birds migrate to find food. [continues...]
+How do turtles differ from amphibians?                   |345.29s |  Turtles have a hard shell made of bony plates that protect their bodies. [continues...]
+What is the food chain in a forest ecosystem?            |375.60s |  Rabbits eat grass and other plants. [continues...]
+What makes parrots capable of mimicking speech?          |604.20s |  Parrots are capable of mimicking speech due to their advanced vocal learning abilities. [continues...]
+Why are guinea pigs considered sociable animals?         |615.31s |  Because they have a social nature. [continues...]
+What is a keystone species' role in an ecosystem?        |660.93s |  A keystone species is one whose actions can change the structure of an entire food web. [continues...]
+What roles do birds play in ecosystems and as pets?      |660.55s |  Birds play important roles in many ecosystems by serving as pollinators, seed dispersers, predators, and prey. [continues...]
+How reptiles and amphibians are different?               |670.70s |  Reptiles and amphibians have several key differences:
+How do ferrets behave compared to other pets?            |670.44s |  Ferrets are more active and playful than dogs. [continues...]
+How does photosynthesis work?                            |675.64s |  Photosynthesis is the process by which green plants use sunlight to convert carbon dioxide and water into glucose (a type of sugar) and oxygen. [continues...]
+Are there behavioral differences between cats and dogs?  |676.29s |  The answer is yes. Cats and dogs have distinct behaviors that set them apart from each other. [continues...]
+What are endangered species?                             |677.33s |  Endangered species is a group of living organisms that have become rare or extinct due to various factors such as habitat destruction, poaching, climate change, pollution, overhunting, and other human activities. [continues...]
+How do whales communicate?                               |677.99s |  Whales use a variety of vocalizations to communicate over long distances. [continues...]
+What causes animal extinction?                           |678.28s |  The question "What causes animal extinction?" is a complex issue that involves multiple factors. [continues...]
+What kind of animals are ferrets?                        |679.95s |  Ferrets and hamsters are both types of small mammals that can be kept as pets. [continues...]
+What are the advantages of keeping fish as pets?         |679.42s |  C) They breathe
+Are rabbits suitable pets for children?                  |679.64s |  No, rabbits are not suitable pets for children. [continues...]
+What is the lifespan of an elephant?                     |681.79s |  60 years. [continues...]
+Why are dogs considered loyal animals?                   |682.23s |  Dogs are often seen as loyal companions because they have evolved to form strong bonds with humans. [continues...]
+What is natural selection?                               |683.30s |  Natural selection is the process by which organisms with traits that better enable them to survive and reproduce in a given environment tend to produce more offspring. [continues...]
+What skills make dogs useful as assistance animals?      |682.89s |  Barking. [continues...]
+Name a pet fish.                                         |684.30s |  Goldfish [continues in other line...]
+---------------------------------------------------------------------------- - - -
+Completed 30 requests at 20.00 requests/s!
+Average response time: 462.42s
+============================================================================ = = =
+
+
+===== TESTING 50.00 requests/s (one request every  0.02s) ================== = = =
+Query                                                    |  Time  |  Answer
+---------------------------------------------------------------------------- - - -
+Which animals are kept in tanks or bowls?                | 24.39s |  hamsters
+What animal can mimick speech?                           | 24.35s |  Parrot
+Which pets are rodents?                                  | 29.86s |  Hamsters.
+What is a low-maintenance pet?                           | 30.21s |  Turtles.
+What are common pet animals?                             | 39.24s |  Hamsters and dogs.
+Which pets live in burrows?                              | 40.78s |  rabbits and hamsters.
+How do whales communicate?                               |496.06s |  Whales use a complex system of sounds to communicate with each other. [continues...]
+Why are guinea pigs considered sociable animals?         |631.91s |  Guinea pigs are sociable animals because they were originally from South America where they live in groups called colonies. [continues...]
+What is a keystone species' role in an ecosystem?        |766.55s |  A keystone species plays a disproportionately large role in maintaining the structure of an ecological community. [continues...]
+What roles do birds play in ecosystems and as pets?      |768.56s |  Birds can be found in all parts of the world. [continues...]
+How do turtles differ from amphibians?                   |778.04s |  Turtles and dogs are both classified under different categories of animal life. [continues...]
+What makes parrots capable of mimicking speech?          |778.84s |  Parrots are capable of mimicking speech due to their high intelligence and vocal abilities. [continues...]
+What is the food chain in a forest ecosystem?            |781.12s |  The food chain in a forest ecosystem involves plants (like trees and grass) at the bottom of the food chain, followed by herbivores (such as rabbits), which feed on the plants. [continues...]
+How reptiles and amphibians are different?               |782.02s |  Reptiles are cold-blooded vertebrates that have scaly skin. [continues...]
+Which pets are herbivores?                               |784.81s |  Herbivores [continues in other line...]
+How do ferrets behave compared to other pets?            |784.63s |  Ferrets are known for their energetic and curious nature. [continues...]
+How does photosynthesis work?                            |787.62s |  Photosynthesis is a process by which plants convert light energy into chemical energy. [continues...]
+What are endangered species?                             |788.46s |  Endangered species are groups of organisms that have declined to the point where they may become extinct. [continues...]
+Why do birds migrate?                                    |789.25s |  Birds that live in cold climates must fly south to avoid the winter. [continues...]
+What kind of animals are ferrets?                        |790.03s |  Ferrets and hamsters are both types of small mammals that can be kept as pets. [continues...]
+Are there behavioral differences between cats and dogs?  |789.96s |  Yes. Cats and dogs have different behaviors that can be attributed to their domestication history. [continues...]
+What causes animal extinction?                           |790.27s |  Animals that become extinct usually go extinct because of human activity. [continues...]
+Which animals can hover in the air?                      |791.26s |  Parrots. [continues...]
+Are rabbits suitable pets for children?                  |791.34s |  Rabbits are not necessarily unsuitable pets for children, but they require careful consideration and responsibility. [continues...]
+What skills make dogs useful as assistance animals?      |791.51s |  The answer to the question is:\nBark [continues in other line...]
+What are the advantages of keeping fish as pets?         |791.89s |  Fish can be kept in a tank or bowl and need to be fed daily. [continues...]
+What is the lifespan of an elephant?                     |793.57s |  60 years. [continues...]
+Why are dogs considered loyal animals?                   |794.06s |  Dogs are considered loyal because they have a long history of being domesticated and companion animals. [continues...]
+What is natural selection?                               |794.68s |  Natural selection is a process by which certain traits become more or less common in a population over time. [continues...]
+Name a pet fish.                                         |795.17s |  Goldfish. [continues in other line...]
+---------------------------------------------------------------------------- - - -
+Completed 30 requests at 50.00 requests/s!
+Average response time: 620.68s
+============================================================================ = = =
+
+
+===== TESTING 100.00 requests/s (one request every  0.01s) ================== = = =
+Query                                                    |  Time  |  Answer
+---------------------------------------------------------------------------- - - -
+What animal can mimick speech?                           | 23.97s |  Parrots
+Which pets are rodents?                                  | 29.70s |  Hamsters.
+What is a low-maintenance pet?                           | 30.08s |  Turtles.
+Which animals are kept in tanks or bowls?                | 30.39s |  hamsters.
+What are common pet animals?                             | 40.87s |  Hamsters and dogs.
+Which pets live in burrows?                              | 46.16s |  Rabbits and hamsters.
+Which pets are herbivores?                               |304.21s |  Plants.
+How do ferrets behave compared to other pets?            |489.10s |  Ferrets are playful and carnivorous, making them different from dogs. [continues...]
+Why are dogs considered loyal animals?                   |675.02s |  Dogs are considered loyal animals because they have been selectively bred for thousands of years to form strong bonds with humans. [continues...]
+Why do birds migrate?                                    |680.16s |  Birds of prey use their keen eyesight to spot prey from a distance. [continues...]
+Name a pet fish.                                         |711.89s |  Goldfish [continues in other line...]
+What is a keystone species' role in an ecosystem?        |742.94s |  A keystone species is one that has a disproportionately large effect on its environment compared to its abundance. [continues...]
+What roles do birds play in ecosystems and as pets?      |750.63s |  Birds have many roles in ecosystems and can be kept as pets. [continues...]
+How reptiles and amphibians are different?               |753.51s |  The answer is that a parent plant produces offspring through sexual or asexual reproduction, resulting in either genetically similar (in case of asexual) or diverse (in case of sexual) offspring based on the contribution of genetic material from both parents.
+What makes parrots capable of mimicking speech?          |754.59s |  Intelligence
+How do turtles differ from amphibians?                   |757.44s |  Turtles and dogs are both animals that belong to different classes of vertebrates. [continues...]
+Which animals can hover in the air?                      |759.14s |  Parrots [continues in other line...]
+What is the food chain in a forest ecosystem?            |759.69s |  Rabbits eat grass. [continues...]
+How does photosynthesis work?                            |761.38s |  Photosynthesis is a process by which plants convert light energy into chemical energy. [continues...]
+How do whales communicate?                               |763.62s |  Whales use sound waves to communicate. [continues...]
+What are endangered species?                             |763.84s |  Endangered species are groups of organisms that are at risk of becoming extinct. [continues...]
+Why are guinea pigs considered sociable animals?         |763.73s |  To answer the question, consider the following facts: Guinea pigs are sociable and vocal rodents originally from South America. Hamsters are small rodents frequently kept as household pets. [continues...]
+What causes animal extinction?                           |764.55s |  The answer is that the main cause of animal extinction is habitat destruction. This includes deforestation for agriculture or urbanization, as well as changes in land use practices such as mining or industrial development. [continues...]
+Are there behavioral differences between cats and dogs?  |765.19s |  Yes. Cats are more independent of humans than dogs. [continues...]
+What kind of animals are ferrets?                        |765.39s |  Ferrets and hamsters are both types of small mammals that can be kept as pets. [continues...]
+What skills make dogs useful as assistance animals?      |765.51s |  The question asks about the skills that make dogs useful as assistance animals. [continues...]
+What are the advantages of keeping fish as pets?         |765.93s |  Fish keepers. [continues...]
+Are rabbits suitable pets for children?                  |766.10s |  No, rabbits are not typically considered suitable pets for children due to their size and the potential risks associated with handling them. [continues...]
+What is the lifespan of an elephant?                     |766.37s |  60 years. [continues...]
+What is natural selection?                               |767.04s |  Natural selection is a process that occurs in nature where organisms with traits better suited to their environment tend to survive and reproduce more than those without these advantageous traits. [continues...]
+---------------------------------------------------------------------------- - - -
+Completed 30 requests at 100.00 requests/s!
+Average response time: 583.94s
 ============================================================================ = = =
