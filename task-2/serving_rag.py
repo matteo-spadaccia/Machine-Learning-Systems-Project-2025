@@ -4,8 +4,13 @@ from transformers import AutoTokenizer, AutoModel, pipeline
 from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
+import threading
+import queue
+import time
 
 outputMaxLength = 200   # Setting the desired output length
+MAX_BATCH_SIZE = 5      # Setting the desired maximum number of requests per batch
+MAX_WAITING_TIME = 5    # Setting the desired maximum time (in seconds) to wait for a batch
 
 documents = [           # Defining some documents in memory
     "Cats are small furry carnivores that are often kept as pets.",
@@ -39,16 +44,31 @@ chat_pipeline = pipeline("text-generation", model="facebook/opt-125m")
 
 
 
-## Hints:
+# Initializing request queue
+request_queue = queue.Queue()
 
-### Step 3.1:
-# 1. Initialize a request queue
-# 2. Initialize a background thread to process the request (via calling the rag_pipeline function)
-# 3. Modify the predict function to put the request in the queue, instead of processing it immediately
+# Initializing background thread
+def process_batch():
+    while True:
+        batch = []
+        while len(batch) < MAX_BATCH_SIZE and not request_queue.empty():
+            batch.append(request_queue.get())
+        
+        # If a batch has requests, process them
+        if batch:
+            queries = [request["query"] for request in batch]
+            results = [rag_pipeline(query) for query in queries]
+            
+            # Send the results back to the original requests (this can be expanded based on the needs)
+            for result, req in zip(results, batch):
+                req["response"].set(result)
 
-### Step 3.2:
-# 1. Take up to MAX_BATCH_SIZE requests from the queue or wait until MAX_WAITING_TIME
-# 2. Process the batched requests
+        # Wait for new requests if the batch is empty
+        time.sleep(MAX_WAITING_TIME)
+
+# Start the background thread
+thread = threading.Thread(target=process_batch, daemon=True)
+thread.start()
 
 def get_embedding(text: str) -> np.ndarray:
     """Compute a simple average-pool embedding."""

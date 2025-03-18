@@ -48,11 +48,17 @@ huggingface-cli download <model_name>
 > [!TIP]
 > To run the request-rates test script (after setting the desired output length in serving_rag.py and activating the service as above):
 > ```shell
-> $ python task-2/test_rag_load.py
+> python test_rag_load.py
 > ```
 > To save the output in a text file too:
 > ```shell
-> $ python -u task-2/test_rag_load.py | tee output.txt
+> python -u test_rag_load.py | tee output.txt
+> ```
+> To run the test script based on a RAG instance launched in the same prompt, use all the following commands together (suppressing the log messages and waiting enough time for the service to activate):
+> ```shell
+> python serving_rag.py > /dev/null 2>&1 &
+> sleep 150
+> python -u test_rag_load.py | tee output.txt
 > ```
 
 ## Step 3:
