@@ -31,6 +31,16 @@ python serving_rag.py
 curl -X POST "http://localhost:8000/rag" -H "Content-Type: application/json" -d '{"query": "Which animals can hover in the air?"}'
 ```
 
+**Note:**  
+If you encounter issues while downloading model checkpoints on a GPU machine, try the following workaround:  
+
+1. Manually download the model on the host machine:  
+
+```bash
+conda activate rag
+huggingface-cli download <model_name>
+```
+
 ## Step 2:
 
 1. Create a new script (bash or python) to test the service with different request rates. A reference implementation is [TraceStorm](https://github.com/ServerlessLLM/TraceStorm)
