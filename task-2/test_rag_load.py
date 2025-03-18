@@ -5,7 +5,7 @@ import json
 
 URL = "http://localhost:8000/rag"
 
-# Defining and merging query sets
+# Defining and merging query sets                               # Notes on answer quality (using model Qwen/Qwen2.5-1.5B-Instruct)
 test_queries_easy = [
     "What are common pet animals?",                             # OK
     "Which animals can hover in the air?",                      # INCORRECT (sometimes: parrots)

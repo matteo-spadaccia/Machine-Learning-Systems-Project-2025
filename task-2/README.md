@@ -54,10 +54,10 @@ Create a new script (bash or python) to test the service with different request 
 > ```bash
 > python -u test_rag_load.py | tee output.txt
 > ```
-> To run the test script based on a RAG instance launched in the same prompt, use all the following commands together (suppressing the log messages and waiting 5min for the service to activate):
+> To run the test script based on a RAG instance launched in the same prompt, use all the following commands together (suppressing the log messages and waiting about 8min for the service to activate):
 > ```bash
 > python serving_rag.py > /dev/null 2>&1 &
-> sleep 300
+> sleep 500
 > python -u test_rag_load.py | tee output.txt
 > ```
 
@@ -87,6 +87,6 @@ Process the batched requests
 > To run the test script based on an enriched RAG instance launched in the same prompt, use all the following commands together:
 > ```bash
 > python serving_rag_new.py > /dev/null 2>&1 &
-> sleep 300
+> sleep 500
 > python -u test_rag_load.py | tee output.txt
 > ```
