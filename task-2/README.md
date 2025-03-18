@@ -43,21 +43,21 @@ huggingface-cli download <model_name>
 
 ## Step 2:
 
-1. Create a new script (bash or python) to test the service with different request rates. A reference implementation is [TraceStorm](https://github.com/ServerlessLLM/TraceStorm)
+Create a new script (bash or python) to test the service with different request rates. A reference implementation is [TraceStorm](https://github.com/ServerlessLLM/TraceStorm)
 
 > [!TIP]
-> To run the request-rates test script (after setting the desired output length in serving_rag.py and activating the service as above):
-> ```shell
+> To run the request-rates test script (after setting the desired output length and documents of interest in serving_rag.py, and activating the service as above):
+> ```bash
 > python test_rag_load.py
 > ```
 > To save the output in a text file too:
-> ```shell
+> ```bash
 > python -u test_rag_load.py | tee output.txt
 > ```
 > To run the test script based on a RAG instance launched in the same prompt, use all the following commands together (suppressing the log messages and waiting enough time for the service to activate):
-> ```shell
+> ```bash
 > python serving_rag.py > /dev/null 2>&1 &
-> sleep 150
+> sleep 200
 > python -u test_rag_load.py | tee output.txt
 > ```
 
@@ -75,7 +75,18 @@ Start a background thread that listens on the request queue
 Take up to MAX_BATCH_SIZE requests from the queue or wait until MAX_WAITING_TIME
 Process the batched requests
 
-
 3. Measure the performance of each step compared to the original service
 
 4. Draw a conclusion
+
+> [!TIP]
+> To activate the RAG with the newly implemented features:
+> ```bash
+> python serving_rag_new.py
+> ```
+> To run the test script based on an enriched RAG instance launched in the same prompt, use all the following commands together:
+> ```bash
+> python serving_rag_new.py > /dev/null 2>&1 &
+> sleep 200
+> python -u test_rag_load.py | tee output.txt
+> ```

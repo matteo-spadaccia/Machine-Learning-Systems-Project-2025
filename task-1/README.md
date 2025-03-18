@@ -2,11 +2,11 @@
 
 > [!TIP]
 > To run the test and benchmaking of Kmeans, KNN and ANN with the different distances fucntions:
-> ```shell
+> ```bash
 > python task.py
 > ```
 > To save the output in a text file too:
-> ```shell
+> ```bash
 > python -u task.py | tee output.txt
 > ```
 
