@@ -38,9 +38,9 @@ embed_tokenizer = AutoTokenizer.from_pretrained(EMBED_MODEL_NAME)
 embed_model = AutoModel.from_pretrained(EMBED_MODEL_NAME)
 
 # Basic Chat LLM
-chat_pipeline = pipeline("text-generation", model="facebook/opt-125m")
+# chat_pipeline = pipeline("text-generation", model="facebook/opt-125m")
 # Note: try this 1.5B model if you got enough GPU memory
-# chat_pipeline = pipeline("text-generation", model="Qwen/Qwen2.5-1.5B-Instruct")
+chat_pipeline = pipeline("text-generation", model="Qwen/Qwen2.5-1.5B-Instruct")
 
 # Initializing request queue
 request_queue = queue.Queue()
