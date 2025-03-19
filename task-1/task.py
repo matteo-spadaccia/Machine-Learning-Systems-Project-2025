@@ -296,7 +296,7 @@ def our_ann(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_kmeans:int=20
     
     return top_k_indices, top_k_distances
 
-def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100, K_probe:int=10, K_pq:int=4, distance_metric:str='dot') -> tuple[torch.Tensor, torch.Tensor]:
+def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100, K_probe:int=10, K_pq:int=4, distance_metric:str='dot', max_iters:int=5, pq_iters:int=3) -> tuple[torch.Tensor, torch.Tensor]:
     """
     Extracts the top-K nearest vectors in A for the query vector X through IVFPQ (Inverted File with Product Quantization).
     
@@ -318,71 +318,72 @@ def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100
     if distance_metric not in distance_types: raise ValueError(f"Invalid distance metric: {distance_metric}. Choose from {distance_types}.")
     dist_multidim_funct = dist_multidim_functions[distance_metric]
     assert D % K_pq == 0, "D must be divisible by K_pq"
-    subvector_dim = D // K_pq
+    sub_dim = D // K_pq
 
     # Ensuring inputs' proper format
     A = torch.as_tensor(A, dtype=DTYPE, device='cuda')
     device = A.device  # (same device)
     X = torch.as_tensor(X, dtype=DTYPE, device=device)    
 
-    # Step 1: Coarse KMeans clustering (faster variant)
+    # --- Step 1: Coarse clustering (KMeans) ---
     centroids = A[torch.randperm(N)[:K_ivf]].clone()
-    for _ in range(5):
+    for _ in range(max_iters):
         dists = dist_multidim_funct(A.unsqueeze(1), centroids.unsqueeze(0))
         assignments = dists.argmin(dim=1)
         for i in range(K_ivf):
-            cluster = A[assignments == i]
-            if cluster.shape[0] > 0:
-                centroids[i] = cluster.mean(dim=0)
+            mask = assignments == i
+            if mask.any():
+                centroids[i] = A[mask].mean(dim=0)
 
     coarse_labels = assignments
 
-    # Step 2: PQ Codebooks and Encoding
+    # --- Step 2: PQ Codebook Training + Encoding ---
     pq_codebooks = []
     pq_codes = []
     for i in range(K_pq):
-        sub_data = A[:, i*subvector_dim:(i+1)*subvector_dim]
-        codebook = sub_data[torch.randperm(N)[:256]].clone()
-        for _ in range(3):
-            d = dist_multidim_funct(sub_data.unsqueeze(1), codebook.unsqueeze(0))
-            labels = d.argmin(dim=1)
+        subvecs = A[:, i*sub_dim:(i+1)*sub_dim]
+        codebook = subvecs[torch.randperm(N)[:256]].clone()
+        for _ in range(pq_iters):
+            dists = dist_multidim_funct(subvecs.unsqueeze(1), codebook.unsqueeze(0))
+            labels = dists.argmin(dim=1)
             for j in range(256):
-                cluster = sub_data[labels == j]
+                cluster = subvecs[labels == j]
                 if cluster.shape[0] > 0:
                     codebook[j] = cluster.mean(dim=0)
         pq_codebooks.append(codebook)
-        d = dist_multidim_funct(sub_data.unsqueeze(1), codebook.unsqueeze(0))
-        codes = d.argmin(dim=1)
-        pq_codes.append(codes)
+
+        final_dists = dist_multidim_funct(subvecs.unsqueeze(1), codebook.unsqueeze(0))
+        pq_codes.append(final_dists.argmin(dim=1))  # [N]
 
     pq_codes = torch.stack(pq_codes, dim=1)  # [N, K_pq]
 
-    # Step 3: Encode query into PQ lookup tables
-    pq_lut = torch.zeros(K_pq, 256, device=A.device)
-    for i in range(K_pq):
-        sub_q = X[i*subvector_dim:(i+1)*subvector_dim].unsqueeze(0)
-        pq_lut[i] = dist_multidim_funct(sub_q, pq_codebooks[i]).squeeze(0)  # [256]
+    # --- Step 3: Build PQ Lookup Table for Query ---
+    pq_lut = torch.stack([
+        dist_multidim_funct(X[i*sub_dim:(i+1)*sub_dim].unsqueeze(0), codebook).squeeze(0)
+        for i, codebook in enumerate(pq_codebooks)
+    ])  # [K_pq, 256]
 
-    # Step 4: Find top K_probe clusters
+    # --- Step 4: Select K_probe coarse clusters ---
     dists_q = dist_multidim_funct(X.unsqueeze(0), centroids).squeeze(0)
     probe_ids = dists_q.topk(K_probe, largest=False).indices
 
-    # Step 5: Collect candidates from selected clusters
-    candidate_indices = torch.cat([torch.nonzero(coarse_labels == i, as_tuple=True)[0] for i in probe_ids])
+    # --- Step 5: Retrieve candidate vectors from selected clusters ---
+    candidate_indices = torch.cat([
+        torch.nonzero(coarse_labels == idx, as_tuple=True)[0]
+        for idx in probe_ids
+    ], dim=0)
+
     if candidate_indices.numel() == 0:
-        return torch.tensor([], device=A.device), torch.tensor([], device=A.device)
+        return torch.empty(0, device=A.device, dtype=torch.long), torch.empty(0, device=A.device)
 
-    candidate_pq_codes = pq_codes[candidate_indices]  # [Nc, K_pq]
+    candidate_codes = pq_codes[candidate_indices]  # [Nc, K_pq]
 
-    # Step 6: Fast distance calculation using LUT
-    # dists[i] = sum pq_lut[j][pq_codes[i,j]] over j
-    #pq_lookup = pq_lut[candidate_pq_codes.T, torch.arange(K_pq).unsqueeze(1)]  # [K_pq, Nc]
-    #pq_dists = pq_lookup.sum(dim=0)  # [Nc]
-    pq_dists = pq_lut[torch.arange(K_pq, device=A.device).unsqueeze(1), candidate_pq_codes.T].sum(dim=0)
+    # --- Step 6: Fast ADC via LUT ---
+    adc_dists = pq_lut[torch.arange(K_pq).unsqueeze(1), candidate_codes.T].sum(dim=0)
 
-
-    top_k = min(K, candidate_indices.shape[0])
-    top_k_distances, top_k_idx = torch.topk(pq_dists, top_k, largest=False)
+    # --- Step 7: Return top K ---
+    top_k = min(K, candidate_indices.size(0))
+    top_k_distances, top_k_idx = torch.topk(adc_dists, top_k, largest=False)
     top_k_indices = candidate_indices[top_k_idx]
     
     return top_k_indices, top_k_distances
@@ -782,7 +783,7 @@ if __name__ == "__main__":
 
     # print("_______________________________________\n\n")
 
-    for K_ivf, K_probe, K_pq in [(64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
+    for K_ivf, K_probe, K_pq in [(32, 16, 10), (64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
         print()
         test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
