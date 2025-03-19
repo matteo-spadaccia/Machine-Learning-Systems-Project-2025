@@ -325,71 +325,63 @@ def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100
     device = A.device  # (same device)
     X = torch.as_tensor(X, dtype=DTYPE, device=device)    
 
-    # --- Step 1: Coarse quantization (KMeans on A to get IVF centroids) ---
-    coarse_centroids = A[torch.randperm(N)[:K_ivf]].clone()
-    for _ in range(10):
-        dists = dist_multidim_funct(A.unsqueeze(1), coarse_centroids.unsqueeze(0))  # [N, K_ivf]
+    # Step 1: Coarse KMeans clustering (faster variant)
+    centroids = A[torch.randperm(N)[:K_ivf]].clone()
+    for _ in range(5):
+        dists = dist_multidim_funct(A.unsqueeze(1), centroids.unsqueeze(0))
         assignments = dists.argmin(dim=1)
         for i in range(K_ivf):
-            cluster_members = A[assignments == i]
-            if cluster_members.numel():
-                coarse_centroids[i] = cluster_members.mean(dim=0)
+            cluster = A[assignments == i]
+            if cluster.shape[0] > 0:
+                centroids[i] = cluster.mean(dim=0)
 
-    # --- Step 2: Assign vectors to coarse clusters ---
-    dists = dist_multidim_funct(A.unsqueeze(1), coarse_centroids.unsqueeze(0))  # [N, K_ivf]
-    coarse_labels = dists.argmin(dim=1)
+    coarse_labels = assignments
 
-    # --- Step 3: Product Quantization (PQ) Codebooks per subvector ---
+    # Step 2: PQ Codebooks and Encoding
     pq_codebooks = []
     pq_codes = []
-
     for i in range(K_pq):
-        sub_data = A[:, i * subvector_dim:(i + 1) * subvector_dim]
+        sub_data = A[:, i*subvector_dim:(i+1)*subvector_dim]
         codebook = sub_data[torch.randperm(N)[:256]].clone()
-        for _ in range(5):
-            dist = dist_multidim_funct(sub_data.unsqueeze(1), codebook.unsqueeze(0))  # [N, 256]
-            labels = dist.argmin(dim=1)
+        for _ in range(3):
+            d = dist_multidim_funct(sub_data.unsqueeze(1), codebook.unsqueeze(0))
+            labels = d.argmin(dim=1)
             for j in range(256):
                 cluster = sub_data[labels == j]
-                if cluster.numel():
+                if cluster.shape[0] > 0:
                     codebook[j] = cluster.mean(dim=0)
         pq_codebooks.append(codebook)
-
-        # Encode PQ codes for A
-        dist = dist_multidim_funct(sub_data.unsqueeze(1), codebook.unsqueeze(0))  # [N, 256]
-        codes = dist.argmin(dim=1)
+        d = dist_multidim_funct(sub_data.unsqueeze(1), codebook.unsqueeze(0))
+        codes = d.argmin(dim=1)
         pq_codes.append(codes)
 
     pq_codes = torch.stack(pq_codes, dim=1)  # [N, K_pq]
 
-    # --- Step 4: Encode Query Vector ---
-    query_pq = []
+    # Step 3: Encode query into PQ lookup tables
+    pq_lut = torch.zeros(K_pq, 256, device=A.device)
     for i in range(K_pq):
-        sub_q = X[i * subvector_dim:(i + 1) * subvector_dim].unsqueeze(0)  # [1, d_sub]
-        dist = dist_multidim_funct(sub_q, pq_codebooks[i])  # [256]
-        query_pq.append(dist.squeeze(0))  # [256]
+        sub_q = X[i*subvector_dim:(i+1)*subvector_dim].unsqueeze(0)
+        pq_lut[i] = dist_multidim_funct(sub_q, pq_codebooks[i]).squeeze(0)  # [256]
 
-    # --- Step 5: Select top-K_probe coarse centroids ---
-    dist_q = dist_multidim_funct(X.unsqueeze(0), coarse_centroids).squeeze(0)  # [K_ivf]
-    probe_ids = dist_q.topk(K_probe, largest=False).indices
+    # Step 4: Find top K_probe clusters
+    dists_q = dist_multidim_funct(X.unsqueeze(0), centroids).squeeze(0)
+    probe_ids = dists_q.topk(K_probe, largest=False).indices
 
-    # --- Step 6: Search only within selected clusters ---
-    candidate_indices = torch.cat([torch.nonzero(coarse_labels == pid).squeeze(1) for pid in probe_ids])
+    # Step 5: Collect candidates from selected clusters
+    candidate_indices = torch.cat([torch.nonzero(coarse_labels == i, as_tuple=True)[0] for i in probe_ids])
     if candidate_indices.numel() == 0:
-        return torch.tensor([]).long(), torch.tensor([])
+        return torch.tensor([], device=A.device), torch.tensor([], device=A.device)
 
-    # --- Step 7: Approximate Distance Computation via PQ reconstruction ---
-    dists = []
-    for idx in candidate_indices:
-        total_dist = 0.0
-        for i in range(K_pq):
-            code_idx = pq_codes[idx, i]
-            total_dist += query_pq[i][code_idx].item()
-        dists.append((idx, total_dist))
+    candidate_pq_codes = pq_codes[candidate_indices]  # [Nc, K_pq]
 
-    dists = sorted(dists, key=lambda x: x[1])
-    top_k_indices = torch.tensor([idx for idx, _ in dists[:K]], device=device)
-    top_k_distances = torch.tensor([dist for _, dist in dists[:K]], device=device)
+    # Step 6: Fast distance calculation using LUT
+    # dists[i] = sum pq_lut[j][pq_codes[i,j]] over j
+    pq_lookup = pq_lut[candidate_pq_codes.T, torch.arange(K_pq).unsqueeze(1)]  # [K_pq, Nc]
+    pq_dists = pq_lookup.sum(dim=0)  # [Nc]
+
+    top_k = min(K, candidate_indices.shape[0])
+    top_k_distances, top_k_idx = torch.topk(pq_dists, top_k, largest=False)
+    top_k_indices = candidate_indices[top_k_idx]
     
     return top_k_indices, top_k_distances
 
@@ -757,38 +749,38 @@ def test_ivfpq(K_ivf:int=100, K_probe:int=10, K_pq:int=5, num_trials=10, test_fi
 
 if __name__ == "__main__":
 
-    test_distances()
+    # test_distances()
 
-    print("_______________________________________\n\n")
+    # print("_______________________________________\n\n")
     
-    test_knn()
-    print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
-    test_knn(N=4000)
-    print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
-    test_knn(N=4000000)
+    # test_knn()
+    # print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
+    # test_knn(N=4000)
+    # print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
+    # test_knn(N=4000000)
     
-    print("_______________________________________\n\n")
+    # print("_______________________________________\n\n")
     
-    test_kmeans()
-    for D in [2, 2**10]:
-        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
-        resCPU = test_kmeans(D=D, device='cpu')
-        resGPU = test_kmeans(D=D, device='cuda')
-        speedups = []
-        for distance_type in distance_types:
-            speedups.append(resCPU[distance_type]['time_ms']/resGPU[distance_type]['time_ms'])
-        print(f" -> Avg. GPU speedup = {np.average(speedups):.2f}x")
+    # test_kmeans()
+    # for D in [2, 2**10]:
+    #     print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
+    #     resCPU = test_kmeans(D=D, device='cpu')
+    #     resGPU = test_kmeans(D=D, device='cuda')
+    #     speedups = []
+    #     for distance_type in distance_types:
+    #         speedups.append(resCPU[distance_type]['time_ms']/resGPU[distance_type]['time_ms'])
+    #     print(f" -> Avg. GPU speedup = {np.average(speedups):.2f}x")
 
-    print("_______________________________________\n")
+    # print("_______________________________________\n")
     
-    for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
-        print()
-        test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
-        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
+    # for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
+    #     print()
+    #     test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
+    #     print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
-    print("_______________________________________\n\n")
+    # print("_______________________________________\n\n")
 
-    for K_ivf, K_probe, K_pq in [(50, 5, 10), (50, 5, 5), (100, 10, 10), (100, 10, 5)]:
+    for K_ivf, K_probe, K_pq in [(64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
         print()
         test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
