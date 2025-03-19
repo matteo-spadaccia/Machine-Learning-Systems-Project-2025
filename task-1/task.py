@@ -704,9 +704,9 @@ def test_ann(K_kmeans:int=20, K_knn:int=10, batch_size:int=100000, max_iters:int
  
 def test_ivfpq(K_ivf:int=100, K_probe:int=10, K_pq:int=5, num_trials=10, test_file=""):
     """
-    Testing and benchmarking ANN with different distance functions.
+    Testing and benchmarking IVFPQ with different distance functions.
     """
-    print("\nBENCHMARKING ANN WITH DIFFERENT DISTANCES...")
+    print("\nBENCHMARKING IVFPQ WITH DIFFERENT DISTANCES...")
     
     N, D, A, X, K = testdata_ann(test_file)
 

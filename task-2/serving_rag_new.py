@@ -9,8 +9,8 @@ import queue
 import time
 
 outputMaxLength = 200   # Setting the desired output length
-MAX_BATCH_SIZE = 5      # Setting the desired maximum number of requests per batch
-MAX_WAITING_TIME = 5    # Setting the desired maximum time (in seconds) to wait for a batch
+MAX_BATCH_SIZE = 10      # Setting the desired maximum number of requests per batch
+MAX_WAITING_TIME = 2    # Setting the desired maximum time (in seconds) to wait for a batch
 
 documents = [           # Defining some documents in memory
     "Cats are small furry carnivores that are often kept as pets.",
@@ -49,19 +49,20 @@ request_queue = queue.Queue()
 def process_batch():
     while True:
         batch = []
+        futures = []
         while len(batch) < MAX_BATCH_SIZE and not request_queue.empty():
-            batch.append(request_queue.get())
-        
-        # If a batch has requests, process them
+            request = request_queue.get()
+            future = concurrent.futures.Future()  # Create a future object
+            batch.append(request)
+            futures.append(future)
+            
         if batch:
             queries = [request["query"] for request in batch]
             results = [rag_pipeline(query) for query in queries]
             
-            # Send the results back to the original requests (this can be expanded based on the needs)
-            for result, req in zip(results, batch):
-                req["response"].set(result)
-
-        # Wait for new requests if the batch is empty
+            for result, future in zip(results, futures):
+                future.set_result(result)  # Set result asynchronously
+            
         time.sleep(MAX_WAITING_TIME)
 
 # Start the background thread
