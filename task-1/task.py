@@ -376,8 +376,10 @@ def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100
 
     # Step 6: Fast distance calculation using LUT
     # dists[i] = sum pq_lut[j][pq_codes[i,j]] over j
-    pq_lookup = pq_lut[candidate_pq_codes.T, torch.arange(K_pq).unsqueeze(1)]  # [K_pq, Nc]
-    pq_dists = pq_lookup.sum(dim=0)  # [Nc]
+    #pq_lookup = pq_lut[candidate_pq_codes.T, torch.arange(K_pq).unsqueeze(1)]  # [K_pq, Nc]
+    #pq_dists = pq_lookup.sum(dim=0)  # [Nc]
+    pq_dists = pq_lut[torch.arange(K_pq, device=A.device).unsqueeze(1), candidate_pq_codes.T].sum(dim=0)
+
 
     top_k = min(K, candidate_indices.shape[0])
     top_k_distances, top_k_idx = torch.topk(pq_dists, top_k, largest=False)
