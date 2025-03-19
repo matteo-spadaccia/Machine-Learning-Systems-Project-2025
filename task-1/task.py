@@ -315,18 +315,20 @@ def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100
     - top_k_indices[K]: indices of the K nearest vectors
     - top_k_distances[K]: corresponding distances
     """
+    if distance_metric not in distance_types: raise ValueError(f"Invalid distance metric: {distance_metric}. Choose from {distance_types}.")
+    dist_multidim_funct = dist_multidim_functions[distance_metric]
     assert D % K_pq == 0, "D must be divisible by K_pq"
-    device = A.device
     subvector_dim = D // K_pq
 
-    # Select appropriate distance functions
-    dist_fn_single = dist_functions[distance_metric]
-    dist_fn_multi = dist_multidim_functions[distance_metric]
+    # Ensuring inputs' proper format
+    A = torch.as_tensor(A, dtype=DTYPE, device='cuda')
+    device = A.device  # (same device)
+    X = torch.as_tensor(X, dtype=DTYPE, device=device)    
 
     # --- Step 1: Coarse quantization (KMeans on A to get IVF centroids) ---
     coarse_centroids = A[torch.randperm(N)[:K_ivf]].clone()
     for _ in range(10):
-        dists = dist_fn_multi(A.unsqueeze(1), coarse_centroids.unsqueeze(0))  # [N, K_ivf]
+        dists = dist_multidim_funct(A.unsqueeze(1), coarse_centroids.unsqueeze(0))  # [N, K_ivf]
         assignments = dists.argmin(dim=1)
         for i in range(K_ivf):
             cluster_members = A[assignments == i]
@@ -334,7 +336,7 @@ def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100
                 coarse_centroids[i] = cluster_members.mean(dim=0)
 
     # --- Step 2: Assign vectors to coarse clusters ---
-    dists = dist_fn_multi(A.unsqueeze(1), coarse_centroids.unsqueeze(0))  # [N, K_ivf]
+    dists = dist_multidim_funct(A.unsqueeze(1), coarse_centroids.unsqueeze(0))  # [N, K_ivf]
     coarse_labels = dists.argmin(dim=1)
 
     # --- Step 3: Product Quantization (PQ) Codebooks per subvector ---
@@ -345,7 +347,7 @@ def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100
         sub_data = A[:, i * subvector_dim:(i + 1) * subvector_dim]
         codebook = sub_data[torch.randperm(N)[:256]].clone()
         for _ in range(5):
-            dist = dist_fn_multi(sub_data.unsqueeze(1), codebook.unsqueeze(0))  # [N, 256]
+            dist = dist_multidim_funct(sub_data.unsqueeze(1), codebook.unsqueeze(0))  # [N, 256]
             labels = dist.argmin(dim=1)
             for j in range(256):
                 cluster = sub_data[labels == j]
@@ -354,7 +356,7 @@ def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100
         pq_codebooks.append(codebook)
 
         # Encode PQ codes for A
-        dist = dist_fn_multi(sub_data.unsqueeze(1), codebook.unsqueeze(0))  # [N, 256]
+        dist = dist_multidim_funct(sub_data.unsqueeze(1), codebook.unsqueeze(0))  # [N, 256]
         codes = dist.argmin(dim=1)
         pq_codes.append(codes)
 
@@ -364,11 +366,11 @@ def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100
     query_pq = []
     for i in range(K_pq):
         sub_q = X[i * subvector_dim:(i + 1) * subvector_dim].unsqueeze(0)  # [1, d_sub]
-        dist = dist_fn_multi(sub_q, pq_codebooks[i])  # [256]
+        dist = dist_multidim_funct(sub_q, pq_codebooks[i])  # [256]
         query_pq.append(dist.squeeze(0))  # [256]
 
     # --- Step 5: Select top-K_probe coarse centroids ---
-    dist_q = dist_fn_multi(X.unsqueeze(0), coarse_centroids).squeeze(0)  # [K_ivf]
+    dist_q = dist_multidim_funct(X.unsqueeze(0), coarse_centroids).squeeze(0)  # [K_ivf]
     probe_ids = dist_q.topk(K_probe, largest=False).indices
 
     # --- Step 6: Search only within selected clusters ---
