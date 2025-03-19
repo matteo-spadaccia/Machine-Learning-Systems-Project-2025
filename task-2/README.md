@@ -65,15 +65,14 @@ Create a new script (bash or python) to test the service with different request 
 
 1. Implement a request queue to handle concurrent requests
 
-A potential design:
-Create a request queue
-Put incoming requests into the queue, instead of directly processing them
-Start a background thread that listens on the request queue
+    - Create a request queue
+    - Put incoming requests into the queue, instead of directly processing them
+    - Start a background thread that listens on the request queue
 
 2. Implement a batch processing mechanism
 
-Take up to MAX_BATCH_SIZE requests from the queue or wait until MAX_WAITING_TIME
-Process the batched requests
+    - Take up to MAX_BATCH_SIZE requests from the queue or wait until MAX_WAITING_TIME
+    - Process the batched requests
 
 3. Measure the performance of each step compared to the original service
 
