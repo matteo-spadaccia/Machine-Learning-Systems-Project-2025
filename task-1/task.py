@@ -296,7 +296,7 @@ def our_ann(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_kmeans:int=20
     
     return top_k_indices, top_k_distances
 
-def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100, K_probe:int=10, K_pq:int=5, distance_metric:str='dot') -> tuple[torch.Tensor, torch.Tensor]:
+def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100, K_probe:int=10, K_pq:int=4, distance_metric:str='dot') -> tuple[torch.Tensor, torch.Tensor]:
     """
     Extracts the top-K nearest vectors in A for the query vector X through IVFPQ (Inverted File with Product Quantization).
     
@@ -701,6 +701,56 @@ def test_ann(K_kmeans:int=20, K_knn:int=10, batch_size:int=100000, max_iters:int
         results[distance_type] = {'time_ms': avg_time, 'recall_rate': recRate}
 
     return results
+ 
+def test_ivfpq(K_ivf:int=100, K_probe:int=10, K_pq:int=5, num_trials=10, test_file=""):
+    """
+    Testing and benchmarking ANN with different distance functions.
+    """
+    print("\nBENCHMARKING ANN WITH DIFFERENT DISTANCES...")
+    
+    N, D, A, X, K = testdata_ann(test_file)
+
+    print(f"K_ivf = {K_ivf}, K_probe = {K_probe}, K_pq = {K_pq} (N = {N}, D = {D}, K = {K}, trials# = {num_trials})")
+
+    results = {}
+
+    def benchmark_ann(distance_metric, num_trials=num_trials):
+        torch.cuda.synchronize()
+        total_time = 0.0
+        last_indices, last_distances = None, None
+        for _ in range(num_trials):
+            start_time = time.time()
+            indices, distances = our_ivfpq(N, D, A, X, K, K_ivf, K_probe, K_pq, distance_metric)
+            torch.cuda.synchronize()
+            total_time += (time.time() - start_time)
+            last_indices, last_distances = indices, distances
+        avg_time = (total_time / num_trials) * 1000
+        return avg_time, last_indices, last_distances
+    
+    # Benchmarking for each distance metric
+    for distance_type in distance_types:
+        avg_time, indices_custom, distances_custom = benchmark_ann(distance_type)
+        indices_custom_np = indices_custom.cpu().numpy() if isinstance(indices_custom, torch.Tensor) else indices_custom
+
+        A_np = A.cpu().numpy() if isinstance(A, torch.Tensor) else A
+        X_np = X.cpu().numpy() if isinstance(X, torch.Tensor) else X
+        A_np = A_np.reshape(-1, D)
+        X_np = X_np.reshape(-1, D)
+
+        if distance_type == "dot":
+            sim_matrix = -np.dot(X_np, A_np.T)
+            indices_std = np.argsort(sim_matrix, axis=1)[:, :K]
+        else:
+            metric_std = metric_map[distance_type]
+            indices_std, _ = standard_knn(A_np, X_np, K, metric=metric_std)
+
+        # Comparing results
+        recRate = recall_rate(indices_custom_np, indices_std)
+        print(f"WITH {distance_type:>3} distance -> recall_rate = {recRate:.2f}, Avg.time = {avg_time:.2f}ms")
+        
+        results[distance_type] = {'time_ms': avg_time, 'recall_rate': recRate}
+
+    return results
 
 
 if __name__ == "__main__":
@@ -732,6 +782,13 @@ if __name__ == "__main__":
     for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
         print()
         test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
+        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
+
+    print("_______________________________________\n\n")
+
+    for K_ivf, K_probe, K_pq in [(50, 5, 10), (50, 5, 5), (100, 10, 10), (100, 10, 5)]:
+        print()
+        test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
     print("_______________________________________\n\n")
