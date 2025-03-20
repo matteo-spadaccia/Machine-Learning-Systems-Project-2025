@@ -4,6 +4,12 @@ from transformers import AutoTokenizer, AutoModel, pipeline
 from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
+# To import our_knn function from task-1 directory
+import os
+import sys
+task1_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../task-1'))
+sys.path.insert(0, task1_path)
+from task import our_knn
 
 outputMaxLength = 200   # Setting the desired output length
 
@@ -60,12 +66,22 @@ def get_embedding(text: str) -> np.ndarray:
 # Precompute document embeddings
 doc_embeddings = np.vstack([get_embedding(doc) for doc in documents])
 
-### You may want to use your own top-k retrieval method (task 1)
 def retrieve_top_k(query_emb: np.ndarray, k: int = 2) -> list:
     """Retrieve top-k docs via dot-product similarity."""
     sims = doc_embeddings @ query_emb.T
     top_k_indices = np.argsort(sims.ravel())[::-1][:k]
     return [documents[i] for i in top_k_indices]
+
+# Using our_knn (task 1) retrieval method
+#DTYPE = torch.float32
+#def retrieve_top_k(query_emb: np.ndarray, k: int = 2) -> list:
+#    """Retrieve top-k docs via our_knn method using dot-product similarity."""
+#    # Converting inputs in proper format
+#    A = torch.from_numpy(doc_embeddings).to(dtype=DTYPE, device='cuda')
+#    X = torch.from_numpy(query_emb).squeeze(0).to(dtype=DTYPE, device='cuda')
+#    N, D = A.shape
+#    top_k_indices, _ = our_knn(N=N, D=D, A=A, X=X, K=k, distance_metric='dot')
+#    return [documents[i] for i in top_k_indices.cpu().tolist()]
 
 def rag_pipeline(query: str, k: int = 2) -> str:
     # Step 1: Input embedding

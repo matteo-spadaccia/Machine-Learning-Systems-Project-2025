@@ -9,7 +9,7 @@ import queue
 import time
 
 outputMaxLength = 200   # Setting the desired output length
-MAX_BATCH_SIZE = 8      # Setting the desired maximum number of requests per batch
+MAX_BATCH_SIZE = 16     # Setting the desired maximum number of requests per batch
 MAX_WAITING_TIME = 4    # Setting the desired maximum time (in seconds) to wait for a batch
 
 documents = [           # Defining some documents in memory
