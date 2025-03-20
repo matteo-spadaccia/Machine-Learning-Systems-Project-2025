@@ -76,11 +76,11 @@ def testdata_ann(test_file):
 def testdata_ivfpq(test_file):
     if test_file == "":
         # use random data
-        N = 10000
+        N = 10000000
         D = 100
         A = np.random.randn(N, D)
         X = np.random.randn(D)
-        K = 100
+        K = 1000
         return N, D, A, X, K
     else:
         # read n, d, a_file, x_file, k from test_file.json
