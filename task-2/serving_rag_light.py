@@ -4,13 +4,8 @@ from transformers import AutoTokenizer, AutoModel, pipeline
 from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
-import threading
-import queue
-import time
 
 outputMaxLength = 200   # Setting the desired output length
-MAX_BATCH_SIZE = 8      # Setting the desired maximum number of requests per batch
-MAX_WAITING_TIME = 4    # Setting the desired maximum time (in seconds) to wait for a batch
 
 documents = [           # Defining some documents in memory
     "Cats are small furry carnivores that are often kept as pets.",
@@ -38,36 +33,22 @@ embed_tokenizer = AutoTokenizer.from_pretrained(EMBED_MODEL_NAME)
 embed_model = AutoModel.from_pretrained(EMBED_MODEL_NAME)
 
 # Basic Chat LLM
-#chat_pipeline = pipeline("text-generation", model="facebook/opt-125m")
+chat_pipeline = pipeline("text-generation", model="facebook/opt-125m")
 # Note: try this 1.5B model if you got enough GPU memory
-chat_pipeline = pipeline("text-generation", model="Qwen/Qwen2.5-1.5B-Instruct")
+#chat_pipeline = pipeline("text-generation", model="Qwen/Qwen2.5-1.5B-Instruct")
 
-# Initializing request queue
-request_queue = queue.Queue()
 
-# Initializing background thread
-def process_batch():
-    while True:
-        batch = []
-        futures = []
-        while len(batch) < MAX_BATCH_SIZE and not request_queue.empty():
-            request = request_queue.get()
-            future = concurrent.futures.Future()  # Create a future object
-            batch.append(request)
-            futures.append(future)
-            
-        if batch:
-            queries = [request["query"] for request in batch]
-            results = [rag_pipeline(query) for query in queries]
-            
-            for result, future in zip(results, futures):
-                future.set_result(result)  # Set result asynchronously
-            
-        time.sleep(MAX_WAITING_TIME)
+## Hints:
 
-# Start the background thread
-thread = threading.Thread(target=process_batch, daemon=True)
-thread.start()
+### Step 3.1:
+# 1. Initialize a request queue
+# 2. Initialize a background thread to process the request (via calling the rag_pipeline function)
+# 3. Modify the predict function to put the request in the queue, instead of processing it immediately
+
+### Step 3.2:
+# 1. Take up to MAX_BATCH_SIZE requests from the queue or wait until MAX_WAITING_TIME
+# 2. Process the batched requests
+
 
 def get_embedding(text: str) -> np.ndarray:
     """Compute a simple average-pool embedding."""
