@@ -4,8 +4,11 @@ from transformers import AutoTokenizer, AutoModel, pipeline
 from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
-import sys # To import our_knn function from task-1 directory
-sys.path.append('../task-1')
+# To import our_knn function from task-1 directory
+import os
+import sys
+task1_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../task-1'))
+sys.path.insert(0, task1_path)
 from task import our_knn
 
 outputMaxLength = 200   # Setting the desired output length
