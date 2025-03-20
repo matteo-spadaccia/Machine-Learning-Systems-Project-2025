@@ -5,7 +5,7 @@ A FastAPI-based Retrieval-Augmented Generation (RAG) service that combines docum
 > [!NOTE]  
 > [serving_rag.py](serving_rag.py) is the original RAG launcher, thereby commented is found an alternative retrieve_top_k function based on the our_knn, developed in [task 1](../task-1/task.py).
 > 
-> [serving_rag_new.py](serving_rag_new.py) is modified to implement the request queue feature as described in Step 3 below.
+> [q-e_serving_rag.py](q-e_serving_rag.py) is modified to implement the request queue feature as described in Step 3 below.
 > 
 > [test_rag_load.py](test_rag_load.py) benchmarks a concurrently launched RAG service's performance at different request rates.
 > 
@@ -86,13 +86,13 @@ Create a new script (bash or python) to test the service with different request 
 ## Step 3:
 
 > [!TIP]
-> To activate the RAG with the request queue feature (after setting the desired output length, documents of interest, and batch-division variables in [serving_rag_new.py](serving_rag_new.py)):
+> To activate the RAG with the request queue feature (after setting the desired output length, documents of interest, and batch-division variables in [q-e_serving_rag.py](q-e_serving_rag.py)):
 > ```bash
-> python serving_rag_new.py
+> python q-e_serving_rag.py
 > ```
 > To run the test script based on a queue-enriched RAG instance launched in the same prompt, use all the following commands together (suppressing the log messages and waiting about 8min for the service to activate):
 > ```bash
-> python serving_rag_new.py > /dev/null 2>&1 &
+> python q-e_serving_rag.py > /dev/null 2>&1 &
 > sleep 500
 > python -u test_rag_load.py | tee output.txt
 > ```
