@@ -648,13 +648,13 @@ def recall_rate(list1, list2):
         total_recall += recall
     return total_recall / len(list1)
 
-def test_ann(K_kmeans:int=20, K_knn:int=10, batch_size:int=100000, max_iters:int=1000, tol:float=1e-4, num_trials=10, test_file=""):
+def test_ann(K_kmeans:int=20, K_knn:int=10, batch_size:int=100000, max_iters:int=1000, tol:float=1e-4, num_trials=10, test_file="", test_function=testdata_ann):
     """
     Testing and benchmarking ANN with different distance functions.
     """
     print("\nBENCHMARKING ANN WITH DIFFERENT DISTANCES...")
     
-    N, D, A, X, K = testdata_ivfpq(test_file)
+    N, D, A, X, K = test_function(test_file)
 
     print(f"K_kmeans = {K_kmeans}, K_knn = {K_knn} (N = {N}, D = {D}, K = {K}, trials# = {num_trials})")
     if N > batch_size: print(f" Data split in batches (batch_size = {batch_size})")
@@ -699,13 +699,13 @@ def test_ann(K_kmeans:int=20, K_knn:int=10, batch_size:int=100000, max_iters:int
 
     return results
  
-def test_ivfpq(K_ivf:int=100, K_probe:int=10, K_pq:int=5, num_trials=10, test_file=""):
+def test_ivfpq(K_ivf:int=100, K_probe:int=10, K_pq:int=5, num_trials=10, test_file="", test_function=testdata_ivfpq):
     """
     Testing and benchmarking IVFPQ with different distance functions.
     """
     print("\nBENCHMARKING IVFPQ WITH DIFFERENT DISTANCES...")
     
-    N, D, A, X, K = testdata_ivfpq(test_file)
+    N, D, A, X, K = test_function(test_file)
 
     print(f"K_ivf = {K_ivf}, K_probe = {K_probe}, K_pq = {K_pq} (N = {N}, D = {D}, K = {K}, trials# = {num_trials})")
 
@@ -780,8 +780,18 @@ if __name__ == "__main__":
         print()
         test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
+    
+    for K_ivf, K_probe, K_pq in [(32, 16, 10), (64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
+        print()
+        test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq, test_function=testdata_ann)
+        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
     # print("_______________________________________\n\n")
+    
+    for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
+        print()
+        test_ann(K_kmeans=K_kmeans, K_knn=K_knn, test_function=testdata_ivfpq)
+        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
     for K_ivf, K_probe, K_pq in [(32, 16, 10), (64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
         print()

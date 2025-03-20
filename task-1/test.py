@@ -76,7 +76,7 @@ def testdata_ann(test_file):
 def testdata_ivfpq(test_file):
     if test_file == "":
         # use random data
-        N = 10000000
+        N = 1000000
         D = 100
         A = np.random.randn(N, D)
         X = np.random.randn(D)
