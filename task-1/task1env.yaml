@@ -1,4 +1,4 @@
-name: mlsys
+name: task1env
 channels:
   - pytorch
   - nvidia

@@ -1,5 +1,25 @@
 # Task 1
 
+> [!NOTE]  
+> [task.py](task.py) defines all the functions, algorithms and relevant testing procedures.
+> 
+> [test.py](test.py) contains the input generators for each developed algorithm.
+> 
+> All the experiments' outputs are saved in [task-1_output.txt](task-1_output.txt), instructions to reproduce them are in the following TIP boxes.
+
+> [!TIP]
+> To install and activate the environment and packages set as used during experientation, run the following:
+> ```bash
+> conda create -n task1env python=3.10.16 -y 
+> conda activate task1env
+> pip install -r requirements.txt
+> ```
+> Or, by extracting the original environment directly:
+> ```bash
+> conda env create -f task1env.yaml
+> conda activate task1env
+> ```
+
 > [!TIP]
 > To run the test and benchmaking of Kmeans, KNN and ANN with the different distances fucntions:
 > ```bash

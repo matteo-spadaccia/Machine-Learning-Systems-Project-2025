@@ -1,4 +1,4 @@
-name: rag
+name: task2env
 channels:
   - defaults
   - https://repo.anaconda.com/pkgs/main
