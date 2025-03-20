@@ -8,7 +8,7 @@ import random
 import warnings
 from scipy.spatial.distance import cosine, euclidean, cityblock # (for testing)
 from sklearn.neighbors import NearestNeighbors # (for testing)
-from test import testdata_kmeans, testdata_knn, testdata_ann
+from test import testdata_kmeans, testdata_knn, testdata_ann, testdata_ivfpq
 
 # Defining float type
 # (32-bit for fast computations and better precision than float16, which already made fail KNNs' proper recognition)
@@ -654,7 +654,7 @@ def test_ann(K_kmeans:int=20, K_knn:int=10, batch_size:int=100000, max_iters:int
     """
     print("\nBENCHMARKING ANN WITH DIFFERENT DISTANCES...")
     
-    N, D, A, X, K = testdata_ann(test_file)
+    N, D, A, X, K = testdata_ivfpq(test_file)
 
     print(f"K_kmeans = {K_kmeans}, K_knn = {K_knn} (N = {N}, D = {D}, K = {K}, trials# = {num_trials})")
     if N > batch_size: print(f" Data split in batches (batch_size = {batch_size})")
@@ -705,7 +705,7 @@ def test_ivfpq(K_ivf:int=100, K_probe:int=10, K_pq:int=5, num_trials=10, test_fi
     """
     print("\nBENCHMARKING IVFPQ WITH DIFFERENT DISTANCES...")
     
-    N, D, A, X, K = testdata_ann(test_file)
+    N, D, A, X, K = testdata_ivfpq(test_file)
 
     print(f"K_ivf = {K_ivf}, K_probe = {K_probe}, K_pq = {K_pq} (N = {N}, D = {D}, K = {K}, trials# = {num_trials})")
 
@@ -776,10 +776,10 @@ if __name__ == "__main__":
 
     # print("_______________________________________\n")
     
-    # for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
-    #     print()
-    #     test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
-    #     print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
+    for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
+        print()
+        test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
+        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
     # print("_______________________________________\n\n")
 
