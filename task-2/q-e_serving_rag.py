@@ -65,7 +65,7 @@ def process_batch():
             
         time.sleep(MAX_WAITING_TIME)
 
-# Start the background thread
+# Starting the background thread
 thread = threading.Thread(target=process_batch, daemon=True)
 thread.start()
 
