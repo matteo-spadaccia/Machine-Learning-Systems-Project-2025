@@ -5,7 +5,7 @@
 > 
 > [test.py](test.py) contains the input generators for each developed algorithm.
 > 
-> All the experiments' outputs are saved in [task-1_output.txt](task-1_output.txt), instructions to reproduce them are in the following TIP boxes.
+> All the experiments' outputs are saved in the [Outputs](Outputs) directory, instructions to reproduce them are in the following TIP boxes.
 
 > [!TIP]
 > To install and activate the environment and packages set as used during experientation, run the following:
@@ -21,7 +21,7 @@
 > ```
 
 > [!TIP]
-> To run the test and benchmaking of Kmeans, KNN and ANN with the different distances fucntions:
+> To run the test and benchmaking of the algorithms with different distance functions:
 > ```bash
 > python task.py
 > ```
@@ -29,6 +29,7 @@
 > ```bash
 > python -u task.py | tee output.txt
 > ```
+> To also test IVFPQ with larger datasets compared to the baseline ANN ones, set the releveant variable to *True* in [task.py](task.py); in this case, a larger-memory GPU would be necessary.
 
 ## Part 1: KNN
 

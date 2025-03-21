@@ -10,9 +10,8 @@ from scipy.spatial.distance import cosine, euclidean, cityblock # (for testing)
 from sklearn.neighbors import NearestNeighbors # (for testing)
 from test import testdata_kmeans, testdata_knn, testdata_ann, testdata_ivfpq
 
-# Defining float type
-# (32-bit for fast computations and better precision than float16, which already made fail KNNs' proper recognition)
-DTYPE = torch.float32
+DTYPE = torch.float32   # Defining float type (32-bit for fast computations and better precision than float16, which already made fail KNNs' proper recognition)
+testIVFPQ = True        # Enable/disable testing of IVFPQ with huge dataset (would require large-memory GPU)
 
 
 # ------------------------------------------------------------------------------------------------
@@ -153,12 +152,13 @@ def our_knn(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, distance_metric
     - top_k_indices[K]: indices of the K nearest vectors
     - top_k_distances[K]: corresponding distances
     """
+    if K <= N: raise ValueError("Invalid K, smaller than N")
     if distance_metric not in distance_types: raise ValueError(f"Invalid distance metric: {distance_metric}. Choose from {distance_types}.")
     dist_multidim_funct = dist_multidim_functions[distance_metric]
 
     # Ensuring inputs' proper format
     A = torch.as_tensor(A, dtype=DTYPE, device='cuda')
-    device = A.device  # (same device)
+    device = A.device # (same device)
     X = torch.as_tensor(X, dtype=DTYPE, device=device)
 
     # Preallocating memory
@@ -173,43 +173,6 @@ def our_knn(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, distance_metric
         batch = A[batch_start:batch_end]
 
         distances = dist_multidim_funct(batch, X) # Applying relevant distance function
-        batch_top_k_distances, batch_top_k_indices = torch.topk(distances, K, largest=False)
-
-        batch_top_k_indices += batch_start
-        if i == 0:
-            top_k_distances = batch_top_k_distances
-            top_k_indices = batch_top_k_indices
-        else:
-            temp_distances = torch.cat((top_k_distances, batch_top_k_distances))
-            temp_indices = torch.cat((top_k_indices, batch_top_k_indices))
-            top_k_distances, indices = torch.topk(temp_distances, K, largest=False)
-            top_k_indices = temp_indices[indices]
-
-    return top_k_indices, top_k_distances
-
-def our_knn(N: int, D: int, A: torch.Tensor, X: torch.Tensor, K: int, distance_metric: str = 'dot', batch_size: int = 100000) -> tuple[torch.Tensor, torch.Tensor]:
-    """
-    Computes top-K nearest vectors in A for the query vector X.
-    """
-    if distance_metric not in distance_types:
-        raise ValueError(f"Invalid distance metric: {distance_metric}. Choose from {distance_types}.")
-    dist_multidim_funct = dist_multidim_functions[distance_metric]
-
-    A = torch.as_tensor(A, dtype=DTYPE, device='cuda')
-    X = torch.as_tensor(X, dtype=DTYPE, device=A.device)
-    N = A.shape[0]
-    K = min(K, N)  # Ensure K is not larger than dataset
-
-    num_batches = (N + batch_size - 1) // batch_size
-    top_k_distances = torch.empty(0, dtype=DTYPE, device=A.device)
-    top_k_indices = torch.empty(0, dtype=torch.long, device=A.device)
-
-    for i in range(num_batches):
-        batch_start = i * batch_size
-        batch_end = min((i + 1) * batch_size, N)
-        batch = A[batch_start:batch_end]
-
-        distances = dist_multidim_funct(batch, X)
         topk_in_batch = min(K, distances.size(0))
         batch_top_k_distances, batch_top_k_indices = torch.topk(distances, topk_in_batch, largest=False)
         batch_top_k_indices += batch_start
@@ -225,6 +188,7 @@ def our_knn(N: int, D: int, A: torch.Tensor, X: torch.Tensor, K: int, distance_m
             top_k_indices = temp_indices[indices]
 
     return top_k_indices, top_k_distances
+
 
 # ------------------------------------------------------------------------------------------------
 # 2.1 - KMeans implementation
@@ -257,7 +221,7 @@ def our_kmeans(N:int, D:int, A:torch.Tensor, K:int, distance_metric:str='dot', m
     # Initializing centroids
     centroids = A[torch.randperm(N)[:K]]
 
-    # Iterating KMeans steps
+    # Iterating KMeans steps    
     for iteration in range(max_iters):
         prev_centroids = centroids.clone()
         # Assignment step
@@ -279,40 +243,6 @@ def our_kmeans(N:int, D:int, A:torch.Tensor, K:int, distance_metric:str='dot', m
             break
     
     return clusters, centroids, iteration+1
-
-def our_kmeans(N: int, D: int, A: torch.Tensor, K: int, distance_metric: str = 'dot', max_iters: int = 1000, tol: float = 1e-4, device: str = 'cuda') -> tuple[torch.Tensor, torch.Tensor, int]:
-    """
-    Clusters the vectors in A with the KMeans method.
-    """
-    if distance_metric not in distance_types:
-        raise ValueError(f"Invalid distance metric: {distance_metric}. Choose from {distance_types}.")
-    dist_multidim_funct = dist_multidim_functions[distance_metric]
-
-    A = torch.as_tensor(A, dtype=DTYPE, device=device)
-    centroids = A[torch.randperm(N)[:K]]
-
-    for iteration in range(max_iters):
-        prev_centroids = centroids.clone()
-        distances = dist_multidim_funct(A[:, None, :], centroids[None, :, :])
-        clusters = torch.argmin(distances, dim=1)
-
-        new_centroids = torch.zeros_like(centroids)
-        counts = torch.zeros(K, device=device, dtype=DTYPE)
-        new_centroids.scatter_add_(0, clusters[:, None].expand(-1, D), A)
-        counts.scatter_add_(0, clusters, torch.ones_like(clusters, dtype=DTYPE))
-
-        mask = counts > 0
-        new_centroids[mask] /= counts[mask, None]
-
-        empty_clusters = (counts == 0).nonzero(as_tuple=True)[0]
-        if empty_clusters.numel() > 0:
-            new_centroids[empty_clusters] = A[torch.randint(0, N, (empty_clusters.numel(),))]
-
-        centroids = new_centroids
-        if torch.max(torch.norm(centroids - prev_centroids, dim=1)) < tol:
-            break
-
-    return clusters, centroids, iteration + 1
 
 
 # ------------------------------------------------------------------------------------------------
@@ -340,11 +270,12 @@ def our_ann(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_kmeans:int=20
     - top_k_indices[K]: indices of the K nearest vectors
     - top_k_distances[K]: corresponding distances
     """
+    if K <= N: raise ValueError("Invalid K, smaller than N")
     if distance_metric not in distance_types: raise ValueError(f"Invalid distance metric: {distance_metric}. Choose from {distance_types}.")
 
     # Ensuring inputs' proper format
     A = torch.as_tensor(A, dtype=DTYPE, device='cuda')
-    device = A.device  # (same device)
+    device = A.device # (same device)
     X = torch.as_tensor(X, dtype=DTYPE, device=device)
 
     # Clustering dataset via KMeans
@@ -365,39 +296,13 @@ def our_ann(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_kmeans:int=20
     # KNN-finding nearest neighbors from selected clusters
     top_k_indices, top_k_distances = our_knn(len(candidate_indices), D, candidates, X, K, distance_metric, batch_size)
     top_k_indices = candidate_indices[top_k_indices]
-    
-    return top_k_indices, top_k_distances
-
-def our_ann(N: int, D: int, A: torch.Tensor, X: torch.Tensor, K: int, K_kmeans: int = 20, K_knn: int = 10, distance_metric: str = 'dot', batch_size: int = 100000, max_iters: int = 1000, tol: float = 1e-4) -> tuple[torch.Tensor, torch.Tensor]:
-    """
-    Approximate Nearest Neighbor search using KMeans clustering.
-    """
-    if distance_metric not in distance_types:
-        raise ValueError(f"Invalid distance metric: {distance_metric}. Choose from {distance_types}.")
-
-    A = torch.as_tensor(A, dtype=DTYPE, device='cuda')
-    X = torch.as_tensor(X, dtype=DTYPE, device=A.device)
-
-    clusters, centroids, _ = our_kmeans(N, D, A, K_kmeans, distance_metric, max_iters, tol, device=A.device)
-
-    centroid_indices, _ = our_knn(K_kmeans, D, centroids, X, K_knn, distance_metric, batch_size)
-
-    candidate_indices = torch.cat([torch.nonzero(clusters == idx, as_tuple=True)[0] for idx in centroid_indices])
-
-    if len(candidate_indices) < K:
-        warnings.warn(f"Only {len(candidate_indices)} candidate vectors were found. Consider increasing K_knn or reducing K_kmeans.", UserWarning)
-        K = len(candidate_indices)
-
-    candidates = A[candidate_indices]
-    top_k_indices, top_k_distances = our_knn(len(candidate_indices), D, candidates, X, K, distance_metric, batch_size)
-    top_k_indices = candidate_indices[top_k_indices]
 
     return top_k_indices, top_k_distances
 
-
+# 2.2+ - IVFPQ implementation
 def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100, K_probe:int=10, K_pq:int=4, distance_metric:str='dot', max_iters:int=5, pq_iters:int=3) -> tuple[torch.Tensor, torch.Tensor]:
     """
-    Extracts the top-K nearest vectors in A for the query vector X through IVFPQ (Inverted File with Product Quantization).
+    Extracts the top-K nearest vectors in A for the query vector X through IVFPQ (Inverted File Product Quantization).
     
     INPUTS
     - N: number of vectors
@@ -421,10 +326,10 @@ def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100
 
     # Ensuring inputs' proper format
     A = torch.as_tensor(A, dtype=DTYPE, device='cuda')
-    device = A.device  # (same device)
+    device = A.device # (same device)
     X = torch.as_tensor(X, dtype=DTYPE, device=device)    
 
-    # --- Step 1: Coarse clustering (KMeans) ---
+    # Coarse clustering dataset via KMeans
     centroids = A[torch.randperm(N)[:K_ivf]].clone()
     for _ in range(max_iters):
         dists = dist_multidim_funct(A.unsqueeze(1), centroids.unsqueeze(0))
@@ -433,10 +338,9 @@ def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100
             mask = assignments == i
             if mask.any():
                 centroids[i] = A[mask].mean(dim=0)
-
     coarse_labels = assignments
 
-    # --- Step 2: PQ Codebook Training + Encoding ---
+    # PQ codebook training and encoding
     pq_codebooks = []
     pq_codes = []
     for i in range(K_pq):
@@ -450,37 +354,31 @@ def our_ivfpq(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_ivf:int=100
                 if cluster.shape[0] > 0:
                     codebook[j] = cluster.mean(dim=0)
         pq_codebooks.append(codebook)
-
         final_dists = dist_multidim_funct(subvecs.unsqueeze(1), codebook.unsqueeze(0))
-        pq_codes.append(final_dists.argmin(dim=1))  # [N]
+        pq_codes.append(final_dists.argmin(dim=1))
+    pq_codes = torch.stack(pq_codes, dim=1)
 
-    pq_codes = torch.stack(pq_codes, dim=1)  # [N, K_pq]
-
-    # --- Step 3: Build PQ Lookup Table for Query ---
+    # Building PQ lookup table
     pq_lut = torch.stack([
         dist_multidim_funct(X[i*sub_dim:(i+1)*sub_dim].unsqueeze(0), codebook).squeeze(0)
         for i, codebook in enumerate(pq_codebooks)
-    ])  # [K_pq, 256]
+    ])
 
-    # --- Step 4: Select K_probe coarse clusters ---
+    # Selecting coarse clusters
     dists_q = dist_multidim_funct(X.unsqueeze(0), centroids).squeeze(0)
     probe_ids = dists_q.topk(K_probe, largest=False).indices
 
-    # --- Step 5: Retrieve candidate vectors from selected clusters ---
+    # Retrieving candidate vectors from selected clusters
     candidate_indices = torch.cat([
         torch.nonzero(coarse_labels == idx, as_tuple=True)[0]
         for idx in probe_ids
     ], dim=0)
-
     if candidate_indices.numel() == 0:
-        return torch.empty(0, device=A.device, dtype=torch.long), torch.empty(0, device=A.device)
+        return torch.empty(0, device=device, dtype=torch.long), torch.empty(0, device=device)
+    candidate_codes = pq_codes[candidate_indices]
+    adc_dists = pq_lut[torch.arange(K_pq).unsqueeze(1), candidate_codes.T].sum(dim=0) # ADC via LUT
 
-    candidate_codes = pq_codes[candidate_indices]  # [Nc, K_pq]
-
-    # --- Step 6: Fast ADC via LUT ---
-    adc_dists = pq_lut[torch.arange(K_pq).unsqueeze(1), candidate_codes.T].sum(dim=0)
-
-    # --- Step 7: Return top K ---
+    # Returning top-K
     top_k = min(K, candidate_indices.size(0))
     top_k_distances, top_k_idx = torch.topk(adc_dists, top_k, largest=False)
     top_k_indices = candidate_indices[top_k_idx]
@@ -851,50 +749,47 @@ def test_ivfpq(K_ivf:int=100, K_probe:int=10, K_pq:int=5, num_trials=10, test_fi
 
 if __name__ == "__main__":
 
-    # test_distances()
+    test_distances()
 
-    # print("_______________________________________\n\n")
+    print("_______________________________________\n\n")
     
     test_knn()
-    # print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
-    # test_knn(N=4000)
-    # print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
-    # test_knn(N=4000000)
+    print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
+    test_knn(N=4000)
+    print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
+    test_knn(N=4000000)
     
-    # print("_______________________________________\n\n")
+    print("_______________________________________\n\n")
     
     test_kmeans()
-    # for D in [2, 2**10]:
-    #     print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
-    #     resCPU = test_kmeans(D=D, device='cpu')
-    #     resGPU = test_kmeans(D=D, device='cuda')
-    #     speedups = []
-    #     for distance_type in distance_types:
-    #         speedups.append(resCPU[distance_type]['time_ms']/resGPU[distance_type]['time_ms'])
-    #     print(f" -> Avg. GPU speedup = {np.average(speedups):.2f}x")
+    for D in [2, 2**10]:
+        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n")
+        resCPU = test_kmeans(D=D, device='cpu')
+        resGPU = test_kmeans(D=D, device='cuda')
+        speedups = []
+        for distance_type in distance_types:
+            speedups.append(resCPU[distance_type]['time_ms']/resGPU[distance_type]['time_ms'])
+        print(f" -> Avg. GPU speedup = {np.average(speedups):.2f}x")
 
-    # print("_______________________________________\n")
+    print("_______________________________________\n")
     
     for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
         print()
         test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
      
-    #for K_ivf, K_probe, K_pq in [(32, 16, 10), (64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
-    #    print()
-    #    test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq, test_function=testdata_ann)
-    #    print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
-
-    # print("_______________________________________\n\n")
-    
-    for K_kmeans, K_knn in [ (5, 3)]:#, (3, 1)]:#(20, 10), (10, 5),
-        print()
-        test_ann(K_kmeans=K_kmeans, K_knn=K_knn, test_function=testdata_ivfpq)
-        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
-
     for K_ivf, K_probe, K_pq in [(32, 16, 10), (64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
         print()
-        test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq)
+        test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq, test_function=testdata_ann)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
+
+    if testIVFPQ:
+        test_ann(K_kmeans=5, K_knn=3, test_function=testdata_ivfpq)
+        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
+
+        for K_ivf, K_probe, K_pq in [(32, 16, 10), (64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
+            print()
+            test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq)
+            print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
     print("_______________________________________\n\n")
