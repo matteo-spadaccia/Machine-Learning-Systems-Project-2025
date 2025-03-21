@@ -152,7 +152,7 @@ def our_knn(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, distance_metric
     - top_k_indices[K]: indices of the K nearest vectors
     - top_k_distances[K]: corresponding distances
     """
-    if K <= N: raise ValueError("Invalid K, smaller than N")
+    if K > N: raise ValueError("Invalid K, larger than N")
     if distance_metric not in distance_types: raise ValueError(f"Invalid distance metric: {distance_metric}. Choose from {distance_types}.")
     dist_multidim_funct = dist_multidim_functions[distance_metric]
 
@@ -270,7 +270,7 @@ def our_ann(N:int, D:int, A:torch.Tensor, X:torch.Tensor, K:int, K_kmeans:int=20
     - top_k_indices[K]: indices of the K nearest vectors
     - top_k_distances[K]: corresponding distances
     """
-    if K <= N: raise ValueError("Invalid K, smaller than N")
+    if K > N: raise ValueError("Invalid K, larger than N")
     if distance_metric not in distance_types: raise ValueError(f"Invalid distance metric: {distance_metric}. Choose from {distance_types}.")
 
     # Ensuring inputs' proper format
