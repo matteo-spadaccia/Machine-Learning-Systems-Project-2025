@@ -789,7 +789,7 @@ if __name__ == "__main__":
         #test_ann(K_kmeans=5, K_knn=3, test_function=testdata_ivfpq)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
-        for K_ivf, K_probe, K_pq in [, (32, 4, 5), (64, 8, 5), (128, 8, 10)]:#(32, 16, 10), (64, 8, 10)
+        for K_ivf, K_probe, K_pq in [(32, 4, 5), (64, 8, 5), (128, 8, 10)]:#(32, 16, 10), (64, 8, 10),
             print()
             test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq)
             print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
