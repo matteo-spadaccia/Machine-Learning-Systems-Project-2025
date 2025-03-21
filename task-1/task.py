@@ -748,7 +748,7 @@ def test_ivfpq(K_ivf:int=100, K_probe:int=10, K_pq:int=5, num_trials=10, test_fi
 
 
 if __name__ == "__main__":
-
+    '''
     test_distances()
 
     print("_______________________________________\n\n")
@@ -778,18 +778,18 @@ if __name__ == "__main__":
         test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
      
-    for K_ivf, K_probe, K_pq in [(32, 16, 10), (64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
+    for K_ivf, K_probe, K_pq in [(32, 16, 10), (64, 8, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
         print()
         test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq, test_function=testdata_ann)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
-
+    '''
     if testIVFPQ:
         print("_______________________________________\n\n")
         print("USING WIDER DATASET FOR ANN-COMPARATIVE IVFPQ BENCHMARKING!\n")
-        test_ann(K_kmeans=5, K_knn=3, test_function=testdata_ivfpq)
+        #test_ann(K_kmeans=5, K_knn=3, test_function=testdata_ivfpq)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
-        for K_ivf, K_probe, K_pq in [(32, 16, 10), (64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
+        for K_ivf, K_probe, K_pq in [, (32, 4, 5), (64, 8, 5), (128, 8, 10)]:#(32, 16, 10), (64, 8, 10)
             print()
             test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq)
             print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
