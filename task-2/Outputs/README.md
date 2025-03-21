@@ -5,11 +5,8 @@
 > 
 > [cpu-run.txt](cpu-run.txt) contains the same results, but with the original RAG service being run on a DICE machine's **CPU**.
 > 
-> [our_knn-based.txt](our_knn-based.txt) has been produced running the model with a retireval based on the *our_knn* function, defined in [task 1](../task-1/task.py).
+> [our_knn-based.txt](our_knn-based.txt) has been produced running the model with a retireval based on the *our_knn* function, defined in [task 1](../../task-1/task.py).
 > 
-> [q-e_4-2.txt](q-e_4-2.txt), [q-e_8-4.txt](q-e_8-4.txt), and [q-e_16-4.txt](q-e_16-4.txt) contain the outcomes of testing the RAG service augmented with a batching-queue implementation. 
+> [q-e_4-2.txt](q-e_4-2.txt), [q-e_8-4.txt](q-e_8-4.txt), and [q-e_16-4.txt](q-e_16-4.txt) contain the outcomes of testing the RAG service augmented with a batching-queue implementation. (integers couples characterize queue-enriched models by *MAX_BATCH_SIZE* and *MAX_WAITING_TIME* set in [q-e_serving_rag.py](../q-e_serving_rag.py) respectively)
 > 
-> 
-> 
-> [light.txt](light.txt), [light_q-e_4-2.txt](light_q-e_4-2.txt), [light_q-e_8-4.txt](light_q-e_8-4.txt), and [light_q-e_16-4.txt](light_q-e_16-4.txt) contain...
-, based on the lighter **facebook/opt-125m** model run on **NVIDIA GeForce GTX 1060 6GB**.
+> [light.txt](light.txt), [light_q-e_4-2.txt](light_q-e_4-2.txt), [light_q-e_8-4.txt](light_q-e_8-4.txt), and [light_q-e_16-4.txt](light_q-e_16-4.txt) contain the results of the baseline RAG and its queue-enriched versions based on the lighter **facebook/opt-125m** model, run on **NVIDIA GeForce GTX 1060 6GB**.
