@@ -11,7 +11,7 @@ from sklearn.neighbors import NearestNeighbors # (for testing)
 from test import testdata_kmeans, testdata_knn, testdata_ann, testdata_ivfpq
 
 DTYPE = torch.float32   # Defining float type (32-bit for fast computations and better precision than float16, which already made fail KNNs' proper recognition)
-testIVFPQ = True        # Enable/disable testing of IVFPQ with huge dataset (would require large-memory GPU)
+testIVFPQ = False       # Enable/disable testing of IVFPQ with huge dataset (would require large-memory GPU)
 
 
 # ------------------------------------------------------------------------------------------------

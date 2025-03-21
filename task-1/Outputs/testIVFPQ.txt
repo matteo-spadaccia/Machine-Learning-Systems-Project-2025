@@ -212,10 +212,10 @@ USING WIDER DATASET FOR ANN-COMPARATIVE IVFPQ BENCHMARKING!
 BENCHMARKING ANN WITH DIFFERENT DISTANCES...
 K_kmeans = 5, K_knn = 3 (N = 200000, D = 100, K = 1000, trials# = 10)
  Data split in batches (batch_size = 100000)
-WITH cos distance -> recall_rate = 0.65, Avg.time = 11703.11ms
-WITH  L2 distance -> recall_rate = 0.63, Avg.time = 11814.82ms
-WITH dot distance -> recall_rate = 0.78, Avg.time = 11556.29ms
-WITH  L1 distance -> recall_rate = 0.65, Avg.time = 15810.73ms
+WITH cos distance -> recall_rate = 0.79, Avg.time = 14506.13ms
+WITH  L2 distance -> recall_rate = 0.74, Avg.time = 13034.20ms
+WITH dot distance -> recall_rate = 0.81, Avg.time = 11045.28ms
+WITH  L1 distance -> recall_rate = 0.69, Avg.time = 16395.17ms
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
