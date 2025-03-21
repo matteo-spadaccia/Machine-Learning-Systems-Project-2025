@@ -776,19 +776,19 @@ if __name__ == "__main__":
 
     # print("_______________________________________\n")
     
-    for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
-        print()
-        test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
-        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
-    
-    for K_ivf, K_probe, K_pq in [(32, 16, 10), (64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
-        print()
-        test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq, test_function=testdata_ann)
-        print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
+    #for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
+    #    print()
+    #    test_ann(K_kmeans=K_kmeans, K_knn=K_knn)
+    #    print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
+     
+    #for K_ivf, K_probe, K_pq in [(32, 16, 10), (64, 8, 10), (128, 16, 10), (32, 4, 5), (64, 8, 5), (128, 8, 10)]:
+    #    print()
+    #    test_ivfpq(K_ivf=K_ivf, K_probe=K_probe, K_pq=K_pq, test_function=testdata_ann)
+    #    print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
     # print("_______________________________________\n\n")
     
-    for K_kmeans, K_knn in [(20, 10), (10, 5), (5, 3), (3, 1)]:
+    for K_kmeans, K_knn in [ (5, 3)]:#, (3, 1)]:#(20, 10), (10, 5),
         print()
         test_ann(K_kmeans=K_kmeans, K_knn=K_knn, test_function=testdata_ivfpq)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
