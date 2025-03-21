@@ -1,4 +1,5 @@
 
+
 TESTING DISTANCE FUNCTIONS...
 
 WITH PyTorch:
@@ -134,35 +135,74 @@ _______________________________________
 
 BENCHMARKING ANN WITH DIFFERENT DISTANCES...
 K_kmeans = 20, K_knn = 10 (N = 1000, D = 100, K = 10, trials# = 10)
-WITH cos distance -> recall_rate = 0.40, Avg.time = 18.38ms
-WITH  L2 distance -> recall_rate = 1.00, Avg.time = 14.37ms
-WITH dot distance -> recall_rate = 0.90, Avg.time = 13.36ms
-WITH  L1 distance -> recall_rate = 1.00, Avg.time = 20.61ms
+WITH cos distance -> recall_rate = 0.70, Avg.time = 20.78ms
+WITH  L2 distance -> recall_rate = 0.70, Avg.time = 17.20ms
+WITH dot distance -> recall_rate = 1.00, Avg.time = 13.38ms
+WITH  L1 distance -> recall_rate = 0.70, Avg.time = 23.88ms
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 BENCHMARKING ANN WITH DIFFERENT DISTANCES...
 K_kmeans = 10, K_knn = 5 (N = 1000, D = 100, K = 10, trials# = 10)
-WITH cos distance -> recall_rate = 0.50, Avg.time = 19.54ms
-WITH  L2 distance -> recall_rate = 0.60, Avg.time = 17.16ms
-WITH dot distance -> recall_rate = 0.60, Avg.time = 19.26ms
-WITH  L1 distance -> recall_rate = 0.80, Avg.time = 28.59ms
+WITH cos distance -> recall_rate = 0.90, Avg.time = 20.69ms
+WITH  L2 distance -> recall_rate = 0.70, Avg.time = 18.40ms
+WITH dot distance -> recall_rate = 0.60, Avg.time = 16.24ms
+WITH  L1 distance -> recall_rate = 0.90, Avg.time = 26.41ms
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 BENCHMARKING ANN WITH DIFFERENT DISTANCES...
 K_kmeans = 5, K_knn = 3 (N = 1000, D = 100, K = 10, trials# = 10)
-WITH cos distance -> recall_rate = 0.60, Avg.time = 28.04ms
-WITH  L2 distance -> recall_rate = 0.80, Avg.time = 20.58ms
-WITH dot distance -> recall_rate = 0.60, Avg.time = 22.97ms
-WITH  L1 distance -> recall_rate = 0.60, Avg.time = 34.41ms
+WITH cos distance -> recall_rate = 0.60, Avg.time = 24.68ms
+WITH  L2 distance -> recall_rate = 0.60, Avg.time = 20.66ms
+WITH dot distance -> recall_rate = 0.70, Avg.time = 22.40ms
+WITH  L1 distance -> recall_rate = 0.90, Avg.time = 33.60ms
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 
 BENCHMARKING ANN WITH DIFFERENT DISTANCES...
 K_kmeans = 3, K_knn = 1 (N = 1000, D = 100, K = 10, trials# = 10)
-WITH cos distance -> recall_rate = 0.30, Avg.time = 26.92ms
-WITH  L2 distance -> recall_rate = 0.20, Avg.time = 26.71ms
-WITH dot distance -> recall_rate = 0.80, Avg.time = 26.02ms
-WITH  L1 distance -> recall_rate = 0.30, Avg.time = 32.20ms
+WITH cos distance -> recall_rate = 0.40, Avg.time = 28.47ms
+WITH  L2 distance -> recall_rate = 0.50, Avg.time = 23.65ms
+WITH dot distance -> recall_rate = 0.60, Avg.time = 23.09ms
+WITH  L1 distance -> recall_rate = 0.40, Avg.time = 39.02ms
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+BENCHMARKING IVFPQ WITH DIFFERENT DISTANCES...
+K_ivf = 32, K_probe = 16, K_pq = 10 (N = 1000, D = 100, K = 10, trials# = 10)
+WITH cos distance -> recall_rate = 0.30, Avg.time = 1422.83ms
+WITH  L2 distance -> recall_rate = 0.40, Avg.time = 1362.26ms
+WITH dot distance -> recall_rate = 0.30, Avg.time = 1217.01ms
+WITH  L1 distance -> recall_rate = 0.50, Avg.time = 1384.20ms
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+BENCHMARKING IVFPQ WITH DIFFERENT DISTANCES...
+K_ivf = 64, K_probe = 8, K_pq = 10 (N = 1000, D = 100, K = 10, trials# = 10)
+WITH cos distance -> recall_rate = 0.50, Avg.time = 1417.29ms
+WITH  L2 distance -> recall_rate = 0.30, Avg.time = 1409.79ms
+WITH dot distance -> recall_rate = 0.10, Avg.time = 1250.46ms
+WITH  L1 distance -> recall_rate = 0.10, Avg.time = 1417.81ms
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+BENCHMARKING IVFPQ WITH DIFFERENT DISTANCES...
+K_ivf = 32, K_probe = 4, K_pq = 5 (N = 1000, D = 100, K = 10, trials# = 10)
+WITH cos distance -> recall_rate = 0.10, Avg.time = 716.74ms
+WITH  L2 distance -> recall_rate = 0.10, Avg.time = 714.10ms
+WITH dot distance -> recall_rate = 0.20, Avg.time = 706.96ms
+WITH  L1 distance -> recall_rate = 0.00, Avg.time = 722.13ms
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+BENCHMARKING IVFPQ WITH DIFFERENT DISTANCES...
+K_ivf = 64, K_probe = 8, K_pq = 5 (N = 1000, D = 100, K = 10, trials# = 10)
+WITH cos distance -> recall_rate = 0.20, Avg.time = 752.68ms
+WITH  L2 distance -> recall_rate = 0.30, Avg.time = 751.20ms
+WITH dot distance -> recall_rate = 0.50, Avg.time = 742.91ms
+WITH  L1 distance -> recall_rate = 0.10, Avg.time = 756.66ms
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+_______________________________________
+
+
