@@ -3,7 +3,7 @@
 A FastAPI-based Retrieval-Augmented Generation (RAG) service that combines document retrieval with text generation.
 
 > [!NOTE]  
-> [serving_rag.py](serving_rag.py) is the original RAG launcher, thereby commented is found an alternative retrieve_top_k function based on the our_knn, developed in [task 1](../task-1/task.py).
+> [serving_rag.py](serving_rag.py) is the original RAG launcher, thereby commented is found an alternative retrieve_top_k function based on the *our_knn*, developed in [task 1](../task-1/task.py).
 > 
 > [q-e_serving_rag.py](q-e_serving_rag.py) is modified to implement the request queue feature as described in Step 3 below.
 > 
@@ -74,7 +74,7 @@ huggingface-cli download <model_name>
 > ```bash
 > python -u test_rag_load.py | tee output.txt
 > ```
-> To run the test script based on a RAG instance launched in the same prompt, use all the following commands together (suppressing the log messages and waiting about 8min for the service to activate):
+> To run the test script based on a RAG instance launched in the same prompt, use all the following commands together (suppressing the log messages and waiting about *8min* for the service to activate):
 > ```bash
 > python serving_rag.py > /dev/null 2>&1 &
 > sleep 500
@@ -90,7 +90,7 @@ Create a new script (bash or python) to test the service with different request 
 > ```bash
 > python q-e_serving_rag.py
 > ```
-> To run the test script based on a queue-enriched RAG instance launched in the same prompt, use all the following commands together (suppressing the log messages and waiting about 8min for the service to activate):
+> To run the test script based on a queue-enriched RAG instance launched in the same prompt, use all the following commands together (suppressing the log messages and waiting about *8min* for the service to activate):
 > ```bash
 > python q-e_serving_rag.py > /dev/null 2>&1 &
 > sleep 500
