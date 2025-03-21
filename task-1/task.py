@@ -784,6 +784,8 @@ if __name__ == "__main__":
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
     if testIVFPQ:
+        print("_______________________________________\n\n")
+        print("USING WIDER DATASET FOR ANN-COMPARATIVE IVFPQ BENCHMARKING!\n")
         test_ann(K_kmeans=5, K_knn=3, test_function=testdata_ivfpq)
         print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
 
