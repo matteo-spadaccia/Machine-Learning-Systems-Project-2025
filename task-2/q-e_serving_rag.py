@@ -7,10 +7,12 @@ from pydantic import BaseModel
 import threading
 import queue
 import time
+import concurrent.futures
+
 
 outputMaxLength = 200   # Setting the desired output length
-MAX_BATCH_SIZE = 8      # Setting the desired maximum number of requests per batch
-MAX_WAITING_TIME = 4    # Setting the desired maximum time (in seconds) to wait for a batch
+MAX_BATCH_SIZE = 16      # Setting the desired maximum number of requests per batch
+MAX_WAITING_TIME = 4   # Setting the desired maximum time (in seconds) to wait for a batch
 
 documents = [           # Defining some documents in memory
     "Cats are small furry carnivores that are often kept as pets.",
@@ -38,7 +40,7 @@ embed_tokenizer = AutoTokenizer.from_pretrained(EMBED_MODEL_NAME)
 embed_model = AutoModel.from_pretrained(EMBED_MODEL_NAME)
 
 # Basic Chat LLM
-#chat_pipeline = pipeline("text-generation", model="facebook/opt-125m")
+# chat_pipeline = pipeline("text-generation", model="facebook/opt-125m")
 # Note: try this 1.5B model if you got enough GPU memory
 chat_pipeline = pipeline("text-generation", model="Qwen/Qwen2.5-1.5B-Instruct")
 
@@ -49,21 +51,32 @@ request_queue = queue.Queue()
 def process_batch():
     while True:
         batch = []
-        futures = []
-        while len(batch) < MAX_BATCH_SIZE and not request_queue.empty():
-            request = request_queue.get()
-            future = concurrent.futures.Future()  # Create a future object
-            batch.append(request)
-            futures.append(future)
-            
-        if batch:
-            queries = [request["query"] for request in batch]
-            results = [rag_pipeline(query) for query in queries]
-            
-            for result, future in zip(results, futures):
-                future.set_result(result)  # Set result asynchronously
-            
-        time.sleep(MAX_WAITING_TIME)
+        start_time = time.time()
+
+        # Collect requests into a batch based on time or size
+        while len(batch) < MAX_BATCH_SIZE:
+            try:
+                # Wait only until MAX_WAITING_TIME expires
+                timeout = max(0, MAX_WAITING_TIME - (time.time() - start_time))
+                request = request_queue.get(timeout=timeout)
+                batch.append(request)
+            except queue.Empty:
+                break  # Exit if timeout hits and no more requests are incoming
+
+        if not batch:
+            continue  # No requests to process in this cycle
+
+        # Extract queries and corresponding futures
+        queries = [req["query"] for req in batch]
+        futures = [req["future"] for req in batch]
+
+        # Process queries
+        results = [rag_pipeline(query) for query in queries]
+
+        # Send results back via the corresponding futures
+        for future, result in zip(futures, results):
+            future.set_result(result)
+
 
 # Starting the background thread
 thread = threading.Thread(target=process_batch, daemon=True)
@@ -108,7 +121,11 @@ class QueryRequest(BaseModel):
 
 @app.post("/rag")
 def predict(payload: QueryRequest):
-    result = rag_pipeline(payload.query, payload.k)
+    # result = rag_pipeline(payload.query, payload.k)
+    future = concurrent.futures.Future()
+    request_queue.put({"query": payload.query, "future": future})
+
+    result = future.result()  # ⬅️ Blocks until the result is ready
     
     return {
         "query": payload.query,
