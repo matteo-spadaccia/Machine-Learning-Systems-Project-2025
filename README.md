@@ -6,6 +6,7 @@ The full course schedule, assessments, and additional details are available in t
 
 [Machine Learning Systems - 2024/2025](http://www.drps.ed.ac.uk/24-25/dpt/cxinfr11269.htm)
 
+The open review link for the report review can be found through this link: [Openreview](https://openreview.net/forum?id=ImhzTbEXrK&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3Ded.ac.uk%2FUniversity_of_Edinburgh%2FSemester_2%2FINFR11269%2FAuthors%23your-submissions))
 ---
 
 ## Repository Structure
