@@ -1,5 +1,8 @@
 # Machine Learning Systems - 2024/2025
 
+> [!NOTE]  
+> [MLS-Report.pdf](MLS-Report.pdf) contains our project report for the hereby described coursework; all the relevant code and results are stored in the two tasks' directories, together with the specific READMEs.
+
 Welcome to the repository for the **Machine Learning Systems** course (INFR11269) for the **2024/2025** academic year. This course focuses on building and deploying machine learning systems, with hands-on programming tasks, paper writing, and peer reviews.
 
 The full course schedule, assessments, and additional details are available in the official course page:
